@@ -12,7 +12,12 @@ inherit
 		redefine
 			default_create, out
 		end
-
+	MEMORY_STRUCTURE
+		export
+			{NONE} all
+		redefine
+			default_create, out
+		end
 create
 	default_create,
 	make_with_code
@@ -21,11 +26,12 @@ feature {NONE} -- Initialization
 
 	default_create
 		do
-			set_code({GIT_EXTERNAL}.GIT_OK)
+			make_with_code({GIT_EXTERNAL}.GIT_OK)
 		end
 
 	make_with_code(a_code:INTEGER)
 		do
+			make
 			set_code(a_code)
 		end
 
@@ -33,39 +39,48 @@ feature -- Query
 
 	out:STRING_8
 		do
-			if is_ok then
-				Result := "No error"
-			elseif is_generic then
-				Result := "Generic error"
-			elseif is_object_not_found then
-				Result := "Requested object could not be found"
-			elseif is_object_exists then
-				Result := "Object exists preventing operation"
-			elseif is_ambiguous then
-				Result := "More than one object matches"
-			elseif is_buffer_too_short then
-				Result := "Output buffer too short to hold data"
-			elseif is_user_defined then
-				Result := "Error in user callback function"
-			elseif is_bare_repository then
-				Result := "Operation not allowed on bare repository"
-			elseif is_unborn_branch then
-				Result := "HEAD refers to branch with no commits"
-			elseif is_merge_in_progress then
-				Result := "Merge in progress prevented operation"
-			elseif is_cannot_fast_forward then
-				Result := "Reference was not fast-forwardable"
-			elseif is_spec_not_valid then
-				Result := "Name/ref spec was not in a valid format"
-			elseif is_merge_conflict then
-				Result := "Merge conflicts prevented operation"
-			elseif is_internal then
-				Result := "Internal error (should never happend)"
-			elseif is_iteration_over then
-				Result := "Signals end of iteration with iterator"
+			if {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_NONE then
+				if is_ok then
+					Result := "No error"
+				elseif is_generic then
+					Result := "Generic error"
+				elseif is_object_not_found then
+					Result := "Requested object could not be found"
+				elseif is_object_exists then
+					Result := "Object exists preventing operation"
+				elseif is_ambiguous then
+					Result := "More than one object matches"
+				elseif is_buffer_too_short then
+					Result := "Output buffer too short to hold data"
+				elseif is_user_defined then
+					Result := "Error in user callback function"
+				elseif is_bare_repository then
+					Result := "Operation not allowed on bare repository"
+				elseif is_unborn_branch then
+					Result := "HEAD refers to branch with no commits"
+				elseif is_merge_in_progress then
+					Result := "Merge in progress prevented operation"
+				elseif is_cannot_fast_forward then
+					Result := "Reference was not fast-forwardable"
+				elseif is_spec_not_valid then
+					Result := "Name/ref spec was not in a valid format"
+				elseif is_locked then
+					Result := "Lock file prevented operation"
+				elseif is_merge_conflict then
+					Result := "Merge conflicts prevented operation"
+				elseif is_reference_modified then
+					Result := "Reference value does not match expected"
+				elseif is_internal then
+					Result := "Internal error (should never happend)"
+				elseif is_iteration_over then
+					Result := "Signals end of iteration with iterator"
+				else
+					Result := "Unmanaged error"
+				end
 			else
-				Result := "Unmanaged error"
+				Result := (create {C_STRING}.make_by_pointer ({GIT_EXTERNAL}.git_error_get_message(item))).string
 			end
+
 		end
 
 	is_ok:BOOLEAN
@@ -119,7 +134,7 @@ feature -- Query
 	is_unborn_branch:BOOLEAN
 			-- HEAD refers to branch with no commits
 		do
-			Result := code = {GIT_EXTERNAL}.GIT_EORPHANEDHEAD
+			Result := code = {GIT_EXTERNAL}.GIT_EUNBORNBRANCH
 		end
 
 	is_merge_in_progress:BOOLEAN
@@ -140,10 +155,22 @@ feature -- Query
 			Result := code = {GIT_EXTERNAL}.GIT_EINVALIDSPEC
 		end
 
+	is_locked:BOOLEAN
+			-- Lock file prevented operation
+		do
+			Result := code = {GIT_EXTERNAL}.GIT_ELOCKED
+		end
+
 	is_merge_conflict:BOOLEAN
 			-- Merge conflicts prevented operation
 		do
 			Result := code = {GIT_EXTERNAL}.GIT_EMERGECONFLICT
+		end
+
+	is_reference_modified:BOOLEAN
+			-- Reference value does not match expected
+		do
+			Result := code = {GIT_EXTERNAL}.GIT_EMODIFIED
 		end
 
 	is_internal:BOOLEAN
@@ -165,7 +192,16 @@ feature -- Access
 
 	set_code(a_code:INTEGER)
 			-- Assign `Current's internal `code' to `a_code'
+		local
+			l_error:INTEGER
 		do
 			code := a_code
+			l_error := {GIT_EXTERNAL}.giterr_detach(item)
+		end
+
+	structure_size:INTEGER
+			-- <Precursor>
+		do
+			Result := {GIT_EXTERNAL}.sizeof_git_error
 		end
 end

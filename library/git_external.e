@@ -49,6 +49,109 @@ feature -- External functions
 			"giterr_detach"
 		end
 
+	frozen git_repository_path(repo:POINTER):POINTER
+			-- Get the path of this repository
+		external
+			"C (git_repository *) : const char * | <git2.h>"
+		alias
+			"git_repository_path"
+		end
+
+	frozen git_repository_workdir(repo:POINTER):POINTER
+			-- Get the path of the working directory for this repository
+		external
+			"C (git_repository *) : const char * | <git2.h>"
+		alias
+			"git_repository_workdir"
+		end
+
+	frozen git_repository_is_bare(repo:POINTER):BOOLEAN
+			-- Check if a repository is bare
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_is_bare"
+		end
+
+	frozen git_repository_is_empty(repo:POINTER):INTEGER
+			-- Check if a repository is empty
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_is_empty"
+		end
+
+	frozen git_repository_is_shallow(repo:POINTER):BOOLEAN
+			-- Determine if the repository was a shallow clone
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_is_shallow"
+		end
+
+	frozen git_repository_set_workdir(repo, workdir:POINTER; update_gitlink:INTEGER):INTEGER
+			-- Set the path to the working directory for this repository
+		external
+			"C (git_repository *, const char *, int) : int | <git2.h>"
+		alias
+			"git_repository_set_workdir"
+		end
+
+	frozen git_repository_state(repo:POINTER):INTEGER
+			-- Determines the status of a git repository
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_state"
+		end
+
+	frozen git_repository_state_cleanup(repo:POINTER):INTEGER
+			-- Remove all the metadata associated with an ongoing command
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_state_cleanup"
+		end
+
+	frozen git_repository_message(out_buf, repo:POINTER):INTEGER
+			-- Retrieve git's prepared message
+		external
+			"C (git_buf *, git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_message"
+		end
+
+	frozen git_buf_free(buffer:POINTER)
+			-- Retrieve git's prepared message
+		external
+			"C (git_buf *)| <git2.h>"
+		alias
+			"git_buf_free"
+		end
+
+	frozen git_repository_message_remove(repo:POINTER):INTEGER
+			-- Remove git's prepared message.
+		external
+			"C (git_repository *) : int | <git2.h>"
+		alias
+			"git_repository_message_remove"
+		end
+
+	frozen git_repository_get_namespace(repo:POINTER):POINTER
+			-- Get the currently active namespace for this repository
+		external
+			"C (git_repository *) : const char * | <git2.h>"
+		alias
+			"git_repository_get_namespace"
+		end
+
+	frozen git_repository_set_namespace(repo, nmspace:POINTER):INTEGER
+			-- Sets the active namespace for this Git Repository
+		external
+			"C (git_repository *, const char *) : int | <git2.h>"
+		alias
+			"git_repository_set_namespace"
+		end
 
 feature -- External structures (git_repository_init_options)
 
@@ -229,6 +332,41 @@ feature -- External structures (git_error)
 			"C [struct <git2.h>] (git_error):int"
 		alias
 			"klass"
+		end
+
+
+feature -- External structures (git_buf)
+
+	frozen sizeof_git_buf: INTEGER
+			-- Number of byte of the C structure git_buf
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_buf)"
+		end
+
+	frozen git_buf_get_ptr (struct:POINTER):POINTER
+			-- start of the allocated memory
+		external
+			"C [struct <git2.h>] (git_buf):char *"
+		alias
+			"ptr"
+		end
+
+	frozen git_buf_get_size (struct:POINTER):INTEGER
+			-- size (in bytes) of the data that is actually used
+		external
+			"C [struct <git2.h>] (git_buf):size_t"
+		alias
+			"size"
+		end
+
+	frozen git_buf_get_asize (struct:POINTER):INTEGER
+			-- holds the known total amount of allocated memory
+		external
+			"C [struct <git2.h>] (git_buf):size_t"
+		alias
+			"asize"
 		end
 
 feature -- External constants
@@ -469,6 +607,86 @@ feature -- External constants
 			"C inline use <git2.h>"
 		alias
 			"GIT_REPOSITORY_INIT_SHARED_ALL"
+		end
+
+	frozen GIT_REPOSITORY_STATE_NONE:INTEGER
+			-- No operation in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_NONE"
+		end
+
+	frozen GIT_REPOSITORY_STATE_MERGE:INTEGER
+			-- A merge in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_MERGE"
+		end
+
+	frozen GIT_REPOSITORY_STATE_REVERT:INTEGER
+			-- A revert in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_REVERT"
+		end
+
+	frozen GIT_REPOSITORY_STATE_CHERRY_PICK:INTEGER
+			-- A cherry pick in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_CHERRY_PICK"
+		end
+
+	frozen GIT_REPOSITORY_STATE_BISECT:INTEGER
+			-- A bisect command in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_BISECT"
+		end
+
+	frozen GIT_REPOSITORY_STATE_REBASE:INTEGER
+			-- A rebase command in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_REBASE"
+		end
+
+	frozen GIT_REPOSITORY_STATE_REBASE_INTERACTIVE:INTEGER
+			-- An interactive rebase in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_REBASE_INTERACTIVE"
+		end
+
+	frozen GIT_REPOSITORY_STATE_REBASE_MERGE:INTEGER
+			-- A rebase merge in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_REBASE_MERGE"
+		end
+
+	frozen GIT_REPOSITORY_STATE_APPLY_MAILBOX:INTEGER
+			-- An apply mailbox in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_APPLY_MAILBOX"
+		end
+
+	frozen GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE:INTEGER
+			-- An apply mailbox in progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE"
 		end
 
 end

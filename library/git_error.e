@@ -25,11 +25,13 @@ create
 feature {NONE} -- Initialization
 
 	default_create
+			-- Initialization of `Current'
 		do
 			make_with_code({GIT_EXTERNAL}.GIT_OK)
 		end
 
 	make_with_code(a_code:INTEGER)
+			-- Initialization of `Current' using `a_code' as error `code'
 		do
 			make
 			set_code(a_code)
@@ -38,6 +40,7 @@ feature {NONE} -- Initialization
 feature -- Query
 
 	out:STRING_8
+			-- <Precursor>
 		do
 			if {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_NONE then
 				if is_ok then

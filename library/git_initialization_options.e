@@ -53,7 +53,7 @@ feature -- Access
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_version(item)
 		end
 
-	working_path_name:detachable READABLE_STRING_GENERAL
+	working_path_name:detachable READABLE_STRING_GENERAL assign set_working_path_name
 			-- Path to the working dir or Void for default
 			-- (i.e. repo_path parent on non-bare repos)
 			-- IF THIS IS RELATIVE PATH, IT WILL BE EVALUATED RELATIVE TO THE REPO_PATH.
@@ -85,7 +85,7 @@ feature -- Access
 			Is_Assign: a_working_path_name ~ working_path_name
 		end
 
-	template_path_name:detachable READABLE_STRING_GENERAL
+	template_path_name:detachable READABLE_STRING_GENERAL assign set_template_path_name
 			-- Path to use for the template directory. If this is NULL,
 			-- the config or default directory options will be used instead.
 		local
@@ -116,7 +116,7 @@ feature -- Access
 			Is_Assign: a_template_path_name ~ template_path_name
 		end
 
-	description:detachable READABLE_STRING_GENERAL
+	description:detachable READABLE_STRING_GENERAL assign set_description
 			-- If not Void, this will be used to initialize the "description"
 			-- file in the repository, instead of using the template content.
 		local
@@ -147,7 +147,7 @@ feature -- Access
 			Is_Assign: a_description ~ description
 		end
 
-	initial_head:detachable READABLE_STRING_GENERAL
+	initial_head:detachable READABLE_STRING_GENERAL assign set_initial_head
 			-- The name of the head to point HEAD at. If Void, then this will be treated as
 			-- "master" and the HEAD ref will be set to "refs/heads/master". If this begins
 			-- with "refs/" it will be used verbatim; otherwise "refs/heads/" will be prefixed.
@@ -179,7 +179,7 @@ feature -- Access
 			Is_Assign: a_initial_head ~ initial_head
 		end
 
-	origin_url:detachable READABLE_STRING_GENERAL
+	origin_url:detachable READABLE_STRING_GENERAL assign set_origin_url
 			-- If this is non-Void, then after the rest of the repository initialization
 			-- is completed, an "origin" remote will be added pointing to this URL.
 		local
@@ -383,7 +383,7 @@ feature -- Access
 		end
 
 	use_world_mode:BOOLEAN
-			-- Change the new repo mode to be world writable
+			-- Change the new repo mode to be group writable (like `use_group_mode') and world readable
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL
 		end

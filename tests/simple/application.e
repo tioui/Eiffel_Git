@@ -30,6 +30,7 @@ feature {NONE} -- Initialization
 				create l_options
 				l_options.set_make_working_path
 				l_options.set_reinitialize
+				l_options.description := "Description du super repo... HÈHÈHÈ."
 				l_repo.initialize (l_options)
 				if not l_repo.error.is_ok then
 					print("Error: " + l_repo.error.out + "%N")

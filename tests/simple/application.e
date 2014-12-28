@@ -1,7 +1,7 @@
 note
-	description : "eiffel_git application root class"
-	date        : "$Date$"
-	revision    : "$Revision$"
+	description : "Test appication for the Eiffel_Git library"
+	date        : "2014, December 27"
+	revision    : "0.1"
 
 class
 	APPLICATION
@@ -30,7 +30,7 @@ feature {NONE} -- Initialization
 				create l_options
 				l_options.set_make_working_path
 				l_options.set_reinitialize
-				l_repo.initialize_with_options (l_options)
+				l_repo.initialize (l_options)
 				if not l_repo.error.is_ok then
 					print("Error: " + l_repo.error.out + "%N")
 				end

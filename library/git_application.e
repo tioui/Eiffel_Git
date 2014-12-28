@@ -1,8 +1,12 @@
 note
-	description: "Summary description for {GIT_APPLICATION}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "[
+					Global management for the Eiffel_Git library.
+					The root class of the program must inherit from this
+					class and launch the `make' feature in the root method.
+				]"
+	author: "Louis Marchand"
+	date: "2014, december 26"
+	revision: "0.1"
 
 deferred class
 	GIT_APPLICATION

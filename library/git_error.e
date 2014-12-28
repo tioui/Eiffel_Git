@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {GIT_ERROR}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Error manager for the Eiffel_Git library."
+	author: "Louis Marchand"
+	date: "2014, december 26"
+	revision: "0.1"
 
 class
 	GIT_ERROR

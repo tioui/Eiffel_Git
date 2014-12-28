@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_git" uuid="54044F74-B39E-42A7-865F-AD57D8F3451C">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-13-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-13-0 http://www.eiffel.com/developers/xml/configuration-1-13-0.xsd" name="eiffel_git" uuid="54044F74-B39E-42A7-865F-AD57D8F3451C" library_target="eiffel_git">
+	<description>A Git library for EiffelStudio</description>
 	<target name="eiffel_git">
-		<root class="APPLICATION" feature="make"/>
-		<option warning="true">
+		<root all_classes="true"/>
+		<version major="0" minor="1" release="0" build="1" product="eiffel_git" copyright="Louis Marchand"/>
+		<option warning="true" void_safety="all" syntax="standard">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<setting name="console_application" value="true"/>
 		<external_linker_flag value="`pkg-config --libs libgit2`">
 			<condition>
 				<platform value="unix"/>
 			</condition>
 		</external_linker_flag>
-		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="eiffel_git" location=".\" recursive="true">
 			<file_rule>
+				<exclude>/.git$</exclude>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>
-				<exclude>/.git$</exclude>
 			</file_rule>
 		</cluster>
 	</target>

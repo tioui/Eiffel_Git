@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {GIT_INITIALIZATION_OPTIONS}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Every options that can be used by the {GIT_REPOSITORY}.`initialize` methode"
+	author: "Louis Marchand"
+	date: "2014, december 27"
+	revision: "0.1"
 
 class
 	GIT_INITIALIZATION_OPTIONS

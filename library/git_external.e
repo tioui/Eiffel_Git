@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {GIT_EXTERNAL}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Every external routine to access libgit2 C library"
+	author: "Louis Marchand"
+	date: "2014, december 26"
+	revision: "0.1"
 
 class
 	GIT_EXTERNAL

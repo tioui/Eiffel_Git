@@ -8,7 +8,7 @@
 		<setting name="console_application" value="true"/>
 		<precompile name="base_pre" location="$ISE_PRECOMP\base-safe.ecf"/>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
-		<library name="eiffel_git" location="..\..\library\eiffel_git.ecf" readonly="false"/>
+		<library name="eiffel_git" location="$EIFFEL_LIBRARY\contrib\library\git\library\eiffel_git.ecf" readonly="false"/>
 		<cluster name="simple" location=".\" recursive="true">
 			<file_rule>
 				<exclude>/EIFGENs$</exclude>

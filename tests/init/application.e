@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GIT_APPLICATION}
 			if error.is_ok then
-				create l_repo.make_with_folder_name ("C:\Users\Louis\Documents\test\bleh")
+				create l_repo.make_with_folder_name ("/home/louis/allo/bleh")
 				create l_options
 				l_options.set_make_working_path
 				l_options.set_reinitialize

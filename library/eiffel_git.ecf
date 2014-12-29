@@ -19,11 +19,25 @@
 				<custom name="ISE_C_COMPILER" value="mingw"/>
 			</condition>
 		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\libgit2\lib64\git2.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="ISE_PLATFORM" value="win64"/>
+				<custom name="ISE_C_COMPILER" value="msc"/>
+			</condition>
+		</external_object>
 		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\libgit2\lib32\git2.dll">
 			<condition>
 				<platform value="windows"/>
 				<custom name="ISE_PLATFORM" value="windows"/>
 				<custom name="ISE_C_COMPILER" value="mingw"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\libgit2\lib32\git2.lib">
+			<condition>
+				<platform value="windows"/>
+				<custom name="ISE_PLATFORM" value="windows"/>
+				<custom name="ISE_C_COMPILER" value="msc"/>
 			</condition>
 		</external_object>
 		<external_include location="$(EIFFEL_LIBRARY)\contrib\library\git\libgit2\include">

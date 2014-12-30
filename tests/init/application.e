@@ -26,12 +26,10 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GIT_APPLICATION}
 			if error.is_ok then
-				create l_repo.make_with_folder_name ("/home/louis/allo/bleh")
 				create l_options
 				l_options.set_make_working_path
-				l_options.set_reinitialize
 				l_options.description := "Description du super repo... HÈHÈHÈ."
-				l_repo.initialize (l_options)
+				create l_repo.make_and_initialize ("/home/louis/allo/bleh", l_options)
 				if not l_repo.error.is_ok then
 					print("Error: " + l_repo.error.out + "%N")
 				end

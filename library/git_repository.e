@@ -9,57 +9,71 @@ class
 
 inherit
 	DISPOSABLE
+		redefine
+			default_create
+		end
 
 create
-	make_with_folder
+	make_and_initialize,
+	make_and_open
 
 feature {NONE} -- Initialization
 
-	make_with_folder(a_folder_name:READABLE_STRING_GENERAL)
-			-- Initialization for `Current' using `a_folder_name' to specify the location
-			-- Of the `Current'. The meaning of `a_folder_name' is different depending
-			-- of the way you will open `Current'. If you `initialize' a normal repository,
-			-- `a_folder_name' represent the working folder (See: `working_folder_name').
-			-- If you `initialize' a bare repository, `a_folder_name' represent the repository
-			-- folder (see: repository_folder_name). If you want to `open' an existing normal
-			-- repository, `a_folder_name' represent the working folder
-			-- (See: `working_folder_name') or a subdirectory of the working folder if the
-			-- `searching' option is used. If you want to `open' an existing bare repository,
-			-- `a_folder_name' represent the repository folder (see: repository_folder_name).
-		do
-			folder_name := a_folder_name
-			create error
-		end
-
-feature -- Access
-
-	folder_name:READABLE_STRING_GENERAL
-			-- Used to open `Current'. The meaning of `folder_name' is different depending
-			-- of the way you will open `Current'. If you `initialize' a normal repository,
-			-- `folder_name' represent the working folder (See: `working_folder_name').
-			-- If you `initialize' a bare repository, `a_folder_name' represent the repository
-			-- folder (see: repository_folder_name). If you want to `open' an existing normal
-			-- repository, `folder_name' represent the working folder
-			-- (See: `working_folder_name') or a subdirectory of the working folder if the
-			-- `searching' option is used. If you want to `open' an existing bare repository,
-			-- `folder_name' represent the repository
-
-	initialize(a_options:GIT_INITIALIZATION_OPTIONS)
-			-- Initialize a new empty git repository located at `a_folder_name'
+	make_and_initialize(a_folder_name:READABLE_STRING_GENERAL; a_options:GIT_INITIALIZATION_OPTIONS)
+			-- Create `Current' and Initialize a new empty git repository located at `a_folder_name'
 			-- folder using `a_options' as initialization options (similar to the
-			-- `git init` command.
+			-- `git init` command).
 		require
-			Not_Open: not is_open
+			Folder_Name_Not_Empty: not a_folder_name.is_empty
 		local
 			l_c_path:C_STRING
 			l_error:INTEGER
 		do
-			create l_c_path.make (folder_name)
+			default_create
+			create l_c_path.make (a_folder_name)
 			l_error := {GIT_EXTERNAL}.git_repository_init_ext($item, l_c_path.item, a_options.item)
 			error.set_code (l_error)
 		ensure
-			Success_Open: error.is_ok implies is_open
+			Success_Initialized: error.is_ok implies is_open
 		end
+
+	make_and_open(a_folder_name:READABLE_STRING_GENERAL; a_options:GIT_OPEN_OPTIONS)
+			-- Open an existing git repository located at `a_folder_nae' using
+			-- `a_options' to configure the open command.
+		require
+			Folder_Name_Not_Empty: not a_folder_name.is_empty
+		local
+			l_c_path:C_STRING
+			l_error:INTEGER
+			l_path_list:READABLE_STRING_GENERAL
+			l_path_separator:STRING
+			l_c_list:C_STRING
+		do
+			default_create
+			create l_path_separator.make_filled ({GIT_EXTERNAL}.GIT_PATH_LIST_SEPARATOR, 1)
+			l_path_list := ""
+			across a_options.ceiling_dirs as la_dir loop
+				if attached l_path_list then
+					l_path_list := l_path_list + l_path_separator + la_dir.item
+				else
+					l_path_list := la_dir.item
+				end
+			end
+			create l_c_path.make (a_folder_name)
+			create l_c_list.make (l_path_list)
+			l_error := {GIT_EXTERNAL}.git_repository_open_ext($item, l_c_path.item, a_options.code, l_c_list.item)
+			error.set_code (l_error)
+		ensure
+			Success_Opened: error.is_ok implies is_open
+		end
+
+	default_create
+			-- Standard initialization of `Current'
+		do
+			create error
+		end
+
+feature -- Access
 
 	close
 			-- Close the repository

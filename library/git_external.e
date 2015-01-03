@@ -153,6 +153,14 @@ feature -- External functions
 			"git_repository_set_namespace"
 		end
 
+	frozen git_repository_open_ext(repo, path:POINTER; flags:NATURAL; ceiling_dirs:POINTER):INTEGER
+			-- Sets the active namespace for this Git Repository
+		external
+			"C (git_repository **, const char *, unsigned int, const char *) : int | <git2.h>"
+		alias
+			"git_repository_open_ext"
+		end
+
 feature -- External structures (git_repository_init_options)
 
 	frozen sizeof_git_repository_init_options: INTEGER
@@ -903,6 +911,41 @@ feature -- External constants
 			"C inline use <git2.h>"
 		alias
 			"GIT_REPOSITORY_STATE_APPLY_MAILBOX_OR_REBASE"
+		end
+
+	frozen GIT_REPOSITORY_OPEN_NO_SEARCH:NATURAL
+			-- Only open the repository if it can be immediately found
+			-- in the given path. Do not walk up from the path looking
+			-- at parent directories.
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_OPEN_NO_SEARCH"
+		end
+
+	frozen GIT_REPOSITORY_OPEN_CROSS_FS:NATURAL
+			-- Unless this flag is set, open will not
+			-- continue searching across filesystem boundaries
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_OPEN_CROSS_FS"
+		end
+
+	frozen GIT_REPOSITORY_OPEN_BARE:NATURAL
+			-- Open repository as a bare repo regardless of core.bare config
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_REPOSITORY_OPEN_BARE"
+		end
+
+	frozen GIT_PATH_LIST_SEPARATOR:CHARACTER
+			-- The separator used in path list strings
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_PATH_LIST_SEPARATOR"
 		end
 
 end

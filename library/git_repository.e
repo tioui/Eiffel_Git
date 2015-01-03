@@ -31,12 +31,6 @@ feature {NONE} -- Initialization
 			create error
 		end
 
-	make
-
-		do
-			create error
-		end
-
 feature -- Access
 
 	folder_name:READABLE_STRING_GENERAL

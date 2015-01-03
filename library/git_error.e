@@ -188,6 +188,168 @@ feature -- Query
 			Result := code = {GIT_EXTERNAL}.GIT_ITEROVER
 		end
 
+	is_no_memory:BOOLEAN
+			-- Not enough memory to perform operation
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_NOMEMORY
+		end
+
+	is_operating_system_error:BOOLEAN
+			-- The operating system does not support used operation
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_OS
+		end
+
+	is_commands_invalid:BOOLEAN
+			-- The used commands are invalid
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_INVALID
+		end
+
+	is_reference_invalid:BOOLEAN
+			-- There was an error in the reference (name or spec)
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_REFERENCE
+		end
+
+	is_zlib_error:BOOLEAN
+			-- An error happend in the Zlib library
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_ZLIB
+		end
+
+	is_repository_problem:BOOLEAN
+			-- An error occured in the repository
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_REPOSITORY
+		end
+
+	is_configuration_invalid:BOOLEAN
+			-- The Git configuration is not valid
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_CONFIG
+		end
+
+	is_regular_expression_not_valid:BOOLEAN
+			-- The used regular expression is not valid
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_REGEX
+		end
+
+	is_object_database_error:BOOLEAN
+			-- There was an error in the repository object database (ODB)
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_ODB
+		end
+
+	is_index_not_valid:BOOLEAN
+			-- There was an error while using an index
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_INDEX
+		end
+
+	is_object_not_valid:BOOLEAN
+			-- There was an error while using an object
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_OBJECT
+		end
+
+	is_network_error:BOOLEAN
+			-- There was an error while using the network
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_NET
+		end
+
+	is_tag_not_valid:BOOLEAN
+			-- There was an error while using a tag
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_TAG
+		end
+
+	is_tree_error:BOOLEAN
+			-- There was an error while using the repository tree
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_TREE
+		end
+
+	is_indexer_error:BOOLEAN
+			-- There was an error while using the indexer
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_INDEXER
+		end
+
+	is_ssl_error:BOOLEAN
+			-- There was an error in the SSL library
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_SSL
+		end
+
+	is_submodule_not_valid:BOOLEAN
+			-- There was an error in a git submodule
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_SUBMODULE
+		end
+
+	is_thread_error:BOOLEAN
+			-- There was an error in the internal thread manipulation
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_THREAD
+		end
+
+	is_stash_changes_not_valid:BOOLEAN
+			-- There was an error in a stash changes
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_STASH
+		end
+
+	is_checkout_error:BOOLEAN
+			-- There was an error when using a checkout
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_CHECKOUT
+		end
+
+	is_fetch_head_error:BOOLEAN
+			-- There was an error while fetching head
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_FETCHHEAD
+		end
+
+	is_merge_error:BOOLEAN
+			-- There was an error while merging
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_MERGE
+		end
+
+	is_ssh_error:BOOLEAN
+			-- There was an error in the SSH library
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_SSH
+		end
+
+	is_filter_error:BOOLEAN
+			-- There was an error in the filtering command
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_FILTER
+		end
+
+	is_revert_error:BOOLEAN
+			-- There was an error while reverting
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_REVERT
+		end
+
+	is_callback_error:BOOLEAN
+			-- There was an error in a C callback
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_CALLBACK
+		end
+
+	is_cherry_pick_error:BOOLEAN
+			-- There was an error while cherry-picking
+		do
+			Result := {GIT_EXTERNAL}.git_error_get_klass(item) = {GIT_EXTERNAL}.GITERR_CHERRYPICK
+		end
+
 feature -- Access
 
 	code:INTEGER assign set_code

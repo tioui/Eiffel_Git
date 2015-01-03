@@ -517,6 +517,222 @@ feature -- External constants
 			"GITERR_NONE"
 		end
 
+	frozen GITERR_NOMEMORY:INTEGER
+			-- Error classes for no more memory
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_NOMEMORY"
+		end
+
+	frozen GITERR_OS:INTEGER
+			-- Error classes for operating system error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_OS"
+		end
+
+	frozen GITERR_INVALID:INTEGER
+			-- Error classes for invalid commands
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_INVALID"
+		end
+
+	frozen GITERR_REFERENCE:INTEGER
+			-- Error classes for reference error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_REFERENCE"
+		end
+
+	frozen GITERR_ZLIB:INTEGER
+			-- Error classes for an error in the zlib library
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_ZLIB"
+		end
+
+	frozen GITERR_REPOSITORY:INTEGER
+			-- Error classes for a repository error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_REPOSITORY"
+		end
+
+	frozen GITERR_CONFIG:INTEGER
+			-- Error classes for a configuration error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_CONFIG"
+		end
+
+	frozen GITERR_REGEX:INTEGER
+			-- Error classes for a regular expression error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_REGEX"
+		end
+
+	frozen GITERR_ODB:INTEGER
+			-- Error classes for an error in object database
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_ODB"
+		end
+
+	frozen GITERR_INDEX:INTEGER
+			-- Error classes for an index error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_INDEX"
+		end
+
+	frozen GITERR_OBJECT:INTEGER
+			-- Error classes for an object error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_OBJECT"
+		end
+
+	frozen GITERR_NET:INTEGER
+			-- Error classes for a network error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_NET"
+		end
+
+	frozen GITERR_TAG:INTEGER
+			-- Error classes for a tag error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_TAG"
+		end
+
+	frozen GITERR_TREE:INTEGER
+			-- Error classes for a repository tree error
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_TREE"
+		end
+
+	frozen GITERR_INDEXER:INTEGER
+			-- Error classes for an error in the indexer
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_INDEXER"
+		end
+
+	frozen GITERR_SSL:INTEGER
+			-- Error classes for an error in the SSL library
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_SSL"
+		end
+
+	frozen GITERR_SUBMODULE:INTEGER
+			-- Error classes for a submodule
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_SUBMODULE"
+		end
+
+	frozen GITERR_THREAD:INTEGER
+			-- Error classes for an internal thread manipulation
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_THREAD"
+		end
+
+	frozen GITERR_STASH:INTEGER
+			-- Error classes for a change stashing
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_STASH"
+		end
+
+	frozen GITERR_CHECKOUT:INTEGER
+			-- Error classes for an error in a checkout
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_CHECKOUT"
+		end
+
+	frozen GITERR_FETCHHEAD:INTEGER
+			-- Error classes while fetching the head of a repository
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_FETCHHEAD"
+		end
+
+	frozen GITERR_MERGE:INTEGER
+			-- Error classes for an error while merging
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_MERGE"
+		end
+
+	frozen GITERR_SSH:INTEGER
+			-- Error classes for an error in the SSH library
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_SSH"
+		end
+
+	frozen GITERR_FILTER:INTEGER
+			-- Error classes for an error while filtering
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_FILTER"
+		end
+
+	frozen GITERR_REVERT:INTEGER
+			-- Error classes for an error while reverting
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_REVERT"
+		end
+
+	frozen GITERR_CALLBACK:INTEGER
+			-- Error classes for an error while calling callback
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_CALLBACK"
+		end
+
+	frozen GITERR_CHERRYPICK:INTEGER
+			-- Error classes for an error while cherry-picking
+		external
+			"C inline use <git2.h>"
+		alias
+			"GITERR_CHERRYPICK"
+		end
+
 	frozen GIT_REPOSITORY_INIT_OPTIONS_VERSION:NATURAL
 			-- The version of the git repository initialization option
 		external

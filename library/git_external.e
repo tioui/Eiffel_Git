@@ -7,7 +7,25 @@ note
 class
 	GIT_EXTERNAL
 
-feature -- External functions
+feature -- External functions <git_callback.h>
+
+	frozen git_checkout_start(object: GIT_CHECKOUT_OPTIONS; options: POINTER)
+			-- Initialize the callback of the checkout system
+		external
+			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_checkout_start"
+		end
+
+	frozen git_fetch_start(object: GIT_CLONE_OPTIONS; options: POINTER)
+			-- Initialize the callback of the fetch system
+		external
+			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_fetch_start"
+		end
+
+feature -- External functions <git2.h>
 
 	frozen git_threads_init:INTEGER
 			-- Init the threading system
@@ -159,6 +177,38 @@ feature -- External functions
 			"C (git_repository **, const char *, unsigned int, const char *) : int | <git2.h>"
 		alias
 			"git_repository_open_ext"
+		end
+
+	frozen git_checkout_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_checkout_options` with default values
+		external
+			"C (git_checkout_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_checkout_init_options"
+		end
+
+	frozen git_clone_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_clone_options` with default values
+		external
+			"C (git_clone_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_clone_init_options"
+		end
+
+	frozen git_repository_init_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_repository_init_options` with default values
+		external
+			"C (git_repository_init_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_repository_init_init_options"
+		end
+
+	frozen git_clone(a_out, url, local_path, options:POINTER):INTEGER
+			-- Initializes a `git_repository_init_options` with default values
+		external
+			"C (git_repository **, const char *, const char *, const git_clone_options *) : int | <git2.h>"
+		alias
+			"git_clone"
 		end
 
 feature -- External structures (git_repository_init_options)
@@ -315,6 +365,110 @@ feature -- External structures (git_repository_init_options)
 		alias
 			"origin_url"
 		end
+
+feature -- External structures (git_checkout_options)
+
+	frozen sizeof_git_checkout_options: INTEGER
+			-- Number of byte of the C structure git_checkout_options
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_checkout_options)"
+		end
+
+feature -- External structures (git_clone_options)
+
+	frozen sizeof_git_clone_options: INTEGER
+			-- Number of byte of the C structure git_clone_options
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_clone_options)"
+		end
+
+	frozen git_clone_options_get_checkout_opts (struct:POINTER):POINTER
+			-- Retreive a pointer to the git_checkout_options of the
+			-- git_repository_init_options structure pointed by the `struct' pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"&(((git_clone_options *)$struct)->checkout_opts)"
+		end
+
+feature -- External structures (git_clone_options)
+
+	frozen sizeof_git_transfer_progress: INTEGER
+			-- Number of byte of the C structure git_transfer_progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_transfer_progress)"
+		end
+
+	frozen git_transfer_progress_get_total_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have to be retreive of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"total_objects"
+		end
+
+	frozen git_transfer_progress_get_indexed_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have been downloaded and has been
+			-- hashed of the git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"indexed_objects"
+		end
+
+	frozen git_transfer_progress_get_received_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have already been retreived of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"received_objects"
+		end
+
+	frozen git_transfer_progress_get_local_objects (struct:POINTER):NATURAL
+			-- Retreive the number of locally-available objects of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"local_objects"
+		end
+
+	frozen git_transfer_progress_get_total_deltas (struct:POINTER):NATURAL
+			-- Retreive the total delta value of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"total_deltas"
+		end
+
+	frozen git_transfer_progress_get_indexed_deltas (struct:POINTER):NATURAL
+			-- Retreive the number of delta value that has been received and hashed of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"indexed_deltas"
+		end
+
+	frozen git_transfer_progress_get_received_bytes (struct:POINTER):INTEGER_64
+			-- Retreive the number of bytes that has been received of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):size_t"
+		alias
+			"received_bytes"
+		end
+
+
 
 feature -- External structures (git_error)
 
@@ -947,5 +1101,24 @@ feature -- External constants
 		alias
 			"GIT_PATH_LIST_SEPARATOR"
 		end
+
+	frozen GIT_CHECKOUT_OPTIONS_VERSION:NATURAL
+			-- The version of the latest `git_checkout_options' structure
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_OPTIONS_VERSION"
+		end
+
+	frozen GIT_CLONE_OPTIONS_VERSION:NATURAL
+			-- The version of the latest `git_clone_options' structure
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_OPTIONS_VERSION"
+		end
+
+
+
 
 end

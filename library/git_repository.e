@@ -15,7 +15,8 @@ inherit
 
 create
 	make_and_initialize,
-	make_and_open
+	make_and_open,
+	make_from_clone
 
 feature {NONE} -- Initialization
 
@@ -62,6 +63,20 @@ feature {NONE} -- Initialization
 			create l_c_path.make (a_folder_name)
 			create l_c_list.make (l_path_list)
 			l_error := {GIT_EXTERNAL}.git_repository_open_ext($item, l_c_path.item, a_options.code, l_c_list.item)
+			error.set_code (l_error)
+		ensure
+			Success_Opened: error.is_ok implies is_open
+		end
+
+	make_from_clone(a_url, a_path:READABLE_STRING_GENERAL;a_options:GIT_CLONE_OPTIONS)
+		local
+			l_c_url, l_c_path:C_STRING
+			l_error : INTEGER
+		do
+			default_create
+			create l_c_path.make (a_path)
+			create l_c_url.make (a_url)
+			l_error := {GIT_EXTERNAL}.git_clone($item, l_c_url.item, l_c_path.item, a_options.item)
 			error.set_code (l_error)
 		ensure
 			Success_Opened: error.is_ok implies is_open

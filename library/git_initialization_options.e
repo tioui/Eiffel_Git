@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			-- Initialization of `Current'
 		do
 			make
-			set_version({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_OPTIONS_VERSION)
+			create error.make_with_code({GIT_EXTERNAL}.git_repository_init_init_options(item, {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_OPTIONS_VERSION))
 			set_flags (0)
 			set_working_path_name(Void)
 			set_template_path_name(Void)
@@ -47,11 +47,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 
-	version:NATURAL
-			-- The version of the internal format of `Current'
-		do
-			Result := {GIT_EXTERNAL}.git_repository_init_options_get_version(item)
-		end
+	error:GIT_ERROR
 
 	working_path_name:detachable READABLE_STRING_GENERAL assign set_working_path_name
 			-- Path to the working dir or Void for default
@@ -408,14 +404,6 @@ feature {NONE} -- Implementation
 			-- One of the internal GIT_REPOSITORY_INIT_SHARED_... constants
 		do
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_mode(item)
-		end
-
-	set_version(a_version:NATURAL)
-			-- Assign `version' with the value of `a_version'
-		do
-			{GIT_EXTERNAL}.git_repository_init_options_set_version(item, a_version)
-		ensure
-			Is_Assign: version ~ a_version
 		end
 
 	set_flags(a_flags:NATURAL)

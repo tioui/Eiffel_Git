@@ -1,3 +1,5 @@
 EIFGENs
 *.swp
 libgit2
+*.o
+*.lib

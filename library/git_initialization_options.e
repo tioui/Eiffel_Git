@@ -48,6 +48,7 @@ feature {NONE} -- Initialization
 feature -- Access
 
 	error:GIT_ERROR
+			-- The last error that has append in the internal library when managing `Current'
 
 	working_path_name:detachable READABLE_STRING_GENERAL assign set_working_path_name
 			-- Path to the working dir or Void for default

@@ -1,6 +1,6 @@
 note
-	description : "Test appication for the Eiffel_Git library"
-	date        : "2014, December 27"
+	description : "A simple program to clone a remote repository inside a local directory"
+	date        : "2015, January 6"
 	revision    : "0.1"
 
 class
@@ -27,16 +27,19 @@ feature {NONE} -- Initialization
 			Precursor {GIT_APPLICATION}
 			if error.is_ok then
 				create l_options
-			--	l_options.progress_action.extend (agent fetch_progress)
-			--	l_options.checkout_options.progress_action.extend (agent checkout_progress)
+				l_options.progress_action.extend (agent fetch_progress)
+				l_options.checkout_options.progress_action.extend (agent checkout_progress)
 				create l_repo.make_from_clone("https://github.com/tioui/eiffel_game_lib.git", "/home/louis/allo/game", l_options)
 				if not l_repo.error.is_ok then
 					print("Error: " + l_repo.error.out + "%N")
+				else
+					print("The Repository location: " + l_repo.repository_folder_name + "%N")
 				end
 			end
 		end
 
 	fetch_progress(a_statistics:GIT_TRANSFERT_PROGRESS)
+			-- Show the progress of the fetch process included in the clone command
 		do
 			print("Fetch progress: ")
 			print("Total_objects=" + a_statistics.total_object.out + " ")
@@ -46,6 +49,7 @@ feature {NONE} -- Initialization
 		end
 
 	checkout_progress(path:READABLE_STRING_GENERAL; current_transfer, total_transfer:INTEGER_64)
+			-- Show the progress of the checkout process included in the clone command
 		do
 			print("Checkout progress: ")
 			print("Path=" + path + " ")

@@ -14,4 +14,8 @@ void git_fetch_start(EIF_OBJECT, EIF_POINTER);
 
 void git_checkout_start(EIF_OBJECT, EIF_POINTER);
 
+void git_fetch_stop(EIF_POINTER);
+
+void git_checkout_stop(EIF_POINTER);
+
 #endif

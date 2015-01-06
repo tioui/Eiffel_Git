@@ -7,6 +7,16 @@ note
 class
 	GIT_EXTERNAL
 
+feature -- External tools
+
+	frozen sizeof_pointer:INTEGER
+			-- Number of byte of a standard system pointer
+		external
+			"C inline"
+		alias
+			"sizeof(void *)"
+		end
+
 feature -- External functions <git_callback.h>
 
 	frozen git_checkout_start(object: GIT_CHECKOUT_OPTIONS; options: POINTER)
@@ -23,6 +33,22 @@ feature -- External functions <git_callback.h>
 			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
 		alias
 			"git_fetch_start"
+		end
+
+	frozen git_checkout_stop(options: POINTER)
+			-- Close the callback of the checkout system
+		external
+			"C (EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_checkout_stop"
+		end
+
+	frozen git_fetch_stop(options: POINTER)
+			-- Close the callback of the fetch system
+		external
+			"C (EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_fetch_stop"
 		end
 
 feature -- External functions <git2.h>
@@ -395,7 +421,7 @@ feature -- External structures (git_clone_options)
 			"&(((git_clone_options *)$struct)->checkout_opts)"
 		end
 
-feature -- External structures (git_clone_options)
+feature -- External structures (git_transfer_options)
 
 	frozen sizeof_git_transfer_progress: INTEGER
 			-- Number of byte of the C structure git_transfer_progress
@@ -529,6 +555,16 @@ feature -- External structures (git_buf)
 			"C [struct <git2.h>] (git_buf):size_t"
 		alias
 			"asize"
+		end
+
+feature -- External structure (git_repository)
+
+	frozen deferencing_git_repository_pointer(repopointer:POINTER):POINTER
+			-- Number of byte of a standard system pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"*((git_repository **) $repopointer)"
 		end
 
 feature -- External constants

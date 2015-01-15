@@ -359,12 +359,10 @@ feature -- Access
 		require
 			Repository_Is_Open: is_open
 		local
-			l_error:INTEGER
 			l_c_string:C_STRING
 		do
 			create l_c_string.make (a_namespace)
-			l_error := {GIT_EXTERNAL}.git_repository_set_namespace(item, l_c_string.item)
-			error.set_code (l_error)
+			error.set_code ({GIT_EXTERNAL}.git_repository_set_namespace(item, l_c_string.item))
 		ensure
 			Is_Set: error.is_ok implies namespace ~ a_namespace
 		end

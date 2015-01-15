@@ -402,6 +402,219 @@ feature -- External structures (git_checkout_options)
 			"sizeof(git_checkout_options)"
 		end
 
+	frozen git_checkout_options_set_version (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the version of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"version"
+		end
+
+	frozen git_checkout_options_get_version (struct:POINTER):NATURAL
+			-- Retreive the value of the version of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"version"
+		end
+
+	frozen git_checkout_options_set_checkout_strategy (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the checkout strategy flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"checkout_strategy"
+		end
+
+	frozen git_checkout_options_get_checkout_strategy (struct:POINTER):NATURAL
+			-- Retreive the value of the checkout strategy flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"checkout_strategy"
+		end
+
+	frozen git_checkout_options_set_disable_filters (struct: POINTER; the_value: BOOLEAN)
+			-- Assign `the_value' of the disable filters boolean of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, int)"
+		alias
+			"disable_filters"
+		end
+
+	frozen git_checkout_options_get_disable_filters (struct:POINTER):BOOLEAN
+			-- Retreive the value of the disable filters boolean of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):int"
+		alias
+			"disable_filters"
+		end
+
+	frozen git_checkout_options_set_dir_mode (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the directory mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"dir_mode"
+		end
+
+	frozen git_checkout_options_get_dir_mode (struct:POINTER):NATURAL
+			-- Retreive the value of the directory mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"dir_mode"
+		end
+
+	frozen git_checkout_options_set_file_mode (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the file mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"file_mode"
+		end
+
+	frozen git_checkout_options_get_file_mode (struct:POINTER):NATURAL
+			-- Retreive the value of the file mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"file_mode"
+		end
+
+	frozen git_checkout_options_set_file_open_flags (struct: POINTER; the_value: INTEGER)
+			-- Assign `the_value' of the file open C lib flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is O_CREAT | O_TRUNC | O_WRONLY
+		external
+			"C [struct <git2.h>] (git_checkout_options, int)"
+		alias
+			"file_open_flags"
+		end
+
+	frozen git_checkout_options_get_file_open_flags (struct:POINTER):INTEGER
+			-- Retreive the value of the file open C lib flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is O_CREAT | O_TRUNC | O_WRONLY
+		external
+			"C [struct <git2.h>] (git_checkout_options):int"
+		alias
+			"file_open_flags"
+		end
+
+	frozen git_checkout_options_set_notify_flags (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the notification (callback) system flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"notify_flags"
+		end
+
+	frozen git_checkout_options_get_notify_flags (struct:POINTER):NATURAL
+			-- Retreive the value of the notification (callback) system flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"notify_flags"
+		end
+
+	frozen git_checkout_options_get_paths_pointer (struct:POINTER):POINTER
+			-- Retreive the pointer of the paths array of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"&(((git_checkout_options *)$struct)->paths)"
+		end
+
+	frozen git_checkout_options_set_baseline (struct, the_value: POINTER)
+			-- Assign `the_value' of the tree baseline pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, git_tree *)"
+		alias
+			"baseline"
+		end
+
+	frozen git_checkout_options_get_baseline (struct:POINTER):POINTER
+			-- Retreive the value of the tree baseline pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):git_tree *"
+		alias
+			"baseline"
+		end
+
+	frozen git_checkout_options_set_target_directory (struct, the_value: POINTER)
+			-- Assign `the_value' of the target directory name pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"target_directory"
+		end
+
+	frozen git_checkout_options_get_target_directory (struct:POINTER):POINTER
+			-- Retreive the value of the target directory name pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"target_directory"
+		end
+
+	frozen git_checkout_options_set_our_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the "our" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"our_label"
+		end
+
+	frozen git_checkout_options_get_our_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the "our" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"our_label"
+		end
+
+	frozen git_checkout_options_set_their_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the "their" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"their_label"
+		end
+
+	frozen git_checkout_options_get_their_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the "their" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"their_label"
+		end
+
 feature -- External structures (git_clone_options)
 
 	frozen sizeof_git_clone_options: INTEGER
@@ -1154,7 +1367,148 @@ feature -- External constants
 			"GIT_CLONE_OPTIONS_VERSION"
 		end
 
+	frozen GIT_CHECKOUT_NONE:NATURAL
+			-- default is a dry run, no actual updates
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_NONE"
+		end
 
+	frozen GIT_CHECKOUT_SAFE:NATURAL
+			-- Allow safe updates that cannot overwrite uncommitted data
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SAFE"
+		end
 
+	frozen GIT_CHECKOUT_SAFE_CREATE:NATURAL
+			-- Allow safe updates plus creation of missing files
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SAFE_CREATE"
+		end
+
+	frozen GIT_CHECKOUT_FORCE:NATURAL
+			-- Allow all updates to force working directory to look like index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_FORCE"
+		end
+
+	frozen GIT_CHECKOUT_ALLOW_CONFLICTS:NATURAL
+			-- Allow checkout to make safe updates even if conflicts are found
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_ALLOW_CONFLICTS"
+		end
+
+	frozen GIT_CHECKOUT_REMOVE_UNTRACKED:NATURAL
+			-- Remove untracked files not in index (that are not ignored)
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_REMOVE_UNTRACKED"
+		end
+
+	frozen GIT_CHECKOUT_REMOVE_IGNORED:NATURAL
+			-- Remove ignored files not in index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_REMOVE_IGNORED"
+		end
+
+	frozen GIT_CHECKOUT_UPDATE_ONLY:NATURAL
+			-- Only update existing files, don't create new ones
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_UPDATE_ONLY"
+		end
+
+	frozen GIT_CHECKOUT_DONT_UPDATE_INDEX:NATURAL
+			-- Normally checkout updates index entries as it goes; this stops that
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DONT_UPDATE_INDEX"
+		end
+
+	frozen GIT_CHECKOUT_NO_REFRESH:NATURAL
+			-- Don't refresh index/config/etc before doing checkout
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_NO_REFRESH"
+		end
+
+	frozen GIT_CHECKOUT_SKIP_UNMERGED:NATURAL
+			-- Allow checkout to skip unmerged files
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SKIP_UNMERGED"
+		end
+
+	frozen GIT_CHECKOUT_USE_OURS:NATURAL
+			-- For unmerged files, checkout stage 2 from index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_USE_OURS"
+		end
+
+	frozen GIT_CHECKOUT_USE_THEIRS:NATURAL
+			-- For unmerged files, checkout stage 3 from index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_USE_THEIRS"
+		end
+
+	frozen GIT_CHECKOUT_DISABLE_PATHSPEC_MATCH:NATURAL
+			-- Treat pathspec as simple list of exact match file paths
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DISABLE_PATHSPEC_MATCH"
+		end
+
+	frozen GIT_CHECKOUT_SKIP_LOCKED_DIRECTORIES:NATURAL
+			-- Ignore directories in use, they will be left empty
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SKIP_LOCKED_DIRECTORIES"
+		end
+
+	frozen GIT_CHECKOUT_DONT_OVERWRITE_IGNORED:NATURAL
+			-- Don't overwrite ignored files that exist in the checkout target
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DONT_OVERWRITE_IGNORED"
+		end
+
+	frozen GIT_CHECKOUT_CONFLICT_STYLE_MERGE:NATURAL
+			--  Write normal merge files for conflicts
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_CONFLICT_STYLE_MERGE"
+		end
+
+	frozen GIT_CHECKOUT_CONFLICT_STYLE_DIFF3:NATURAL
+			--  Include common ancestor data in diff3 format files for conflicts
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_CONFLICT_STYLE_DIFF3"
+		end
 
 end

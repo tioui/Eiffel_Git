@@ -30,22 +30,32 @@ feature {NONE} -- Initialization
 		do
 			make
 			create error.make_with_code({GIT_EXTERNAL}.git_repository_init_init_options(item, {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_OPTIONS_VERSION))
-			set_flags (0)
-			set_working_path_name(Void)
-			set_template_path_name(Void)
-			set_description(Void)
-			set_initial_head(Void)
-			set_origin_url(Void)
-			unset_bare
-			unset_reinitialize
-			set_dot_git
-			unset_make_working_directory
-			unset_make_working_path
-			unset_external_template
-			set_umask_mode
+			if is_valid then
+				set_flags (0)
+				set_working_path_name(Void)
+				set_template_path_name(Void)
+				set_description(Void)
+				set_initial_head(Void)
+				set_origin_url(Void)
+				disable_bare
+				disable_reinitialize
+				enable_dot_git
+				disable_make_working_directory
+				disable_make_working_path
+				disable_external_template
+				enable_umask_mode
+			end
+		ensure then
+			No_Error_Implies_Valid: error.is_ok implies is_valid
 		end
 
 feature -- Access
+
+	is_valid:BOOLEAN
+			-- Is `Current' in a valid (usable) state
+		do
+			Result := not item.is_default_pointer
+		end
 
 	error:GIT_ERROR
 			-- The last error that has append in the internal library when managing `Current'
@@ -211,10 +221,10 @@ feature -- Access
 			-- If set, a bare repository with no working directory will be created
 			-- Default value: False
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE) /= 0
 		end
 
-	set_bare
+	enable_bare
 			-- Active `is_bare'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE))
@@ -222,7 +232,7 @@ feature -- Access
 			Is_Set: is_bare
 		end
 
-	unset_bare
+	disable_bare
 			-- Desactive `is_bare'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE.bit_not))
@@ -235,10 +245,10 @@ feature -- Access
 			-- appears to already be an git repository
 			-- Default value: False
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT)) = 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT) = 0
 		end
 
-	set_reinitialize
+	enable_reinitialize
 			-- Active `can_reinitialize'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT.bit_not))
@@ -247,7 +257,7 @@ feature -- Access
 			Is_Set: can_reinitialize
 		end
 
-	unset_reinitialize
+	disable_reinitialize
 			-- Desactive `can_reinitialize'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT))
@@ -260,10 +270,10 @@ feature -- Access
 			-- prevents that behavior.
 			-- Default value: True
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR)) = 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR) = 0
 		end
 
-	set_dot_git
+	enable_dot_git
 			-- Active `use_dot_git'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR.bit_not))
@@ -271,7 +281,7 @@ feature -- Access
 			Is_Set: use_dot_git
 		end
 
-	unset_dot_git
+	disable_dot_git
 			-- Desactive `use_dot_git'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR))
@@ -283,10 +293,10 @@ feature -- Access
 			-- Make the repo_path (and workdir_path) as needed
 			-- Default value: False
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR) /= 0
 		end
 
-	set_make_working_directory
+	enable_make_working_directory
 			-- Active `must_make_working_directory'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR))
@@ -294,7 +304,7 @@ feature -- Access
 			Is_Set: must_make_working_directory
 		end
 
-	unset_make_working_directory
+	disable_make_working_directory
 			-- Desactive `must_make_working_directory'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR.bit_not))
@@ -306,10 +316,10 @@ feature -- Access
 			-- Recursively make the repo_path (and workdir_path) as needed
 			-- Default value: False
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH) /= 0
 		end
 
-	set_make_working_path
+	enable_make_working_path
 			-- Active `must_make_working_path'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH))
@@ -317,7 +327,7 @@ feature -- Access
 			Is_Set: must_make_working_path
 		end
 
-	unset_make_working_path
+	disable_make_working_path
 			-- Desactive `must_make_working_path'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH.bit_not))
@@ -331,10 +341,10 @@ feature -- Access
 			-- back on "/usr/share/git-core/templates" if it exists.
 			-- Default value: False
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE) /= 0
 		end
 
-	set_external_template
+	enable_external_template
 			-- Active `use_external_template'
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE))
@@ -342,7 +352,7 @@ feature -- Access
 			Is_Set: use_external_template
 		end
 
-	unset_external_template
+	disable_external_template
 			-- Desactive `use_external_template'
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE.bit_not))
@@ -357,12 +367,14 @@ feature -- Access
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK
 		end
 
-	set_umask_mode
+	enable_umask_mode
 			-- Activate `use_umask_mode'
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK)
 		ensure
 			Is_Set: use_umask_mode
+			Is_Group_Unset: not use_group_mode
+			Is_World_Unset: not use_world_mode
 		end
 
 	use_group_mode:BOOLEAN
@@ -371,12 +383,14 @@ feature -- Access
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP
 		end
 
-	set_group_mode
+	enable_group_mode
 			-- Activate `use_group_mode'
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP)
 		ensure
 			Is_Set: use_group_mode
+			Is_Umask_Unset: not use_umask_mode
+			Is_World_Unset: not use_world_mode
 		end
 
 	use_world_mode:BOOLEAN
@@ -385,12 +399,14 @@ feature -- Access
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL
 		end
 
-	set_world_mode
+	enable_world_mode
 			-- Activate `use_world_mode'
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL)
 		ensure
 			Is_Set: use_world_mode
+			Is_Umask_Unset: not use_umask_mode
+			Is_Group_Unset: not use_group_mode
 		end
 
 feature {NONE} -- Implementation

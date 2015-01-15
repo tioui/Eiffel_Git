@@ -32,14 +32,24 @@ feature {NONE} -- Initialization
 		do
 			make
 			l_error := {GIT_EXTERNAL}.git_clone_init_options(item,{GIT_EXTERNAL}.GIT_CLONE_OPTIONS_VERSION)
-			create checkout_options.make_from_clone_option ({GIT_EXTERNAL}.git_clone_options_get_checkout_opts(item), Current)
 			create error
 			create progress_action
+			create checkout_options.make_from_clone_option ({GIT_EXTERNAL}.git_clone_options_get_checkout_opts(item))
+			checkout_options.set_parent_clone_options (Current)
+			checkout_options.enable_safe_with_create
 			is_callback_initialize := False
 			error.set_code (l_error)
+		ensure then
+			No_Error_Implies_Valid: error.is_ok implies is_valid
 		end
 
 feature -- Access
+
+	is_valid:BOOLEAN
+			-- Is `Current' in a valid (usable) state
+		do
+			Result := not item.is_default_pointer
+		end
 
 	error:GIT_ERROR
 			-- The last error that has append in the internal library when managing `Current'

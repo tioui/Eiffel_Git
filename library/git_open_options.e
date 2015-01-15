@@ -1,8 +1,8 @@
 note
-	description: "Summary description for {GIT_OPEN_OPTIONS}."
-	author: ""
-	date: "$Date$"
-	revision: "$Revision$"
+	description: "Options to used when opening a {GIT_REPOSITORY} with `make_and_open'."
+	author: "Louis Marchand"
+	date: "2015, January 3"
+	revision: "0.1"
 
 class
 	GIT_OPEN_OPTIONS
@@ -37,13 +37,13 @@ feature -- Access
 			Result := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_NO_SEARCH) = 0
 		end
 
-	set_searching_parent
+	enable_searching_parent
 			-- Set `is_searching_parent' to True.
 		do
 			code := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_NO_SEARCH.bit_not)
 		end
 
-	unset_searching_parent
+	disable_searching_parent
 			-- Set `is_searching_parent' to False.
 		do
 			code := code.bit_or({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_NO_SEARCH)
@@ -56,13 +56,13 @@ feature -- Access
 			Result := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_CROSS_FS) /= 0
 		end
 
-	set_search_crossing_filesystem
+	enable_search_crossing_filesystem
 			-- Set `is_search_crossing_filesystem' to True.
 		do
 			code := code.bit_or({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_CROSS_FS)
 		end
 
-	unset_search_crossing_filesystem
+	disable_search_crossing_filesystem
 			-- Set `is_search_crossing_filesystem' to False.
 		do
 			code := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_CROSS_FS.bit_not)
@@ -75,13 +75,13 @@ feature -- Access
 			Result := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_BARE) /= 0
 		end
 
-	set_opening_as_bare
+	enable_opening_as_bare
 			-- Set `is_opening_as_bare' to True.
 		do
 			code := code.bit_or({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_BARE)
 		end
 
-	unset_opening_as_bare
+	disable_opening_as_bare
 			-- Set `is_opening_as_bare' to False.
 		do
 			code := code.bit_and({GIT_EXTERNAL}.GIT_REPOSITORY_OPEN_BARE.bit_not)

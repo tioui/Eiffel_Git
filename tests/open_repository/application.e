@@ -25,7 +25,7 @@ feature {NONE} -- Initialization
 		do
 			Precursor {GIT_APPLICATION}
 			if error.is_ok then
-				create l_repo.make_and_open ("/home/louis/allo/bleh", create {GIT_OPEN_OPTIONS})
+				create l_repo.make_and_open ("C:\Users\Louis\Documents\bleh", create {GIT_OPEN_OPTIONS})
 				if l_repo.error.is_ok then
 					if l_repo.is_empty then
 						print("The repositoy seems to be empty.%N")

@@ -4,7 +4,7 @@ OUTDIR= .
 INDIR= .
 CC = $cc
 OUTPUT_CMD = $output_cmd
-CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. -I..$(DIR)
+CFLAGS = -I"$rt_include" -I..$(DIR)spec$(DIR)include -I. -I..$(DIR)..$(DIR)libgit2$(DIR)include
 JCFLAGS = $(CFLAGS) $ccflags $optimize
 JMTCFLAGS = $(CFLAGS) $mtccflags $optimize
 JILCFLAGS = $(CFLAGS) $mtccflags $optimize -DEIF_IL_DLL
@@ -39,7 +39,7 @@ git_callback.lib: $(OBJECTS)
 	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@
 
-git_callback.lib: $(MT_OBJECTS)
+mtgit_callback.lib: $(MT_OBJECTS)
 	$alib_line
 	$(MKDIR) ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib
 	$(MV) $@ ..$(DIR)spec$(DIR)$(ISE_C_COMPILER)$(DIR)$(ISE_PLATFORM)$(DIR)lib$(DIR)$@

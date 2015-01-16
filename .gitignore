@@ -1,3 +1,4 @@
 EIFGENs
 *.swp
 *.rc
+tests/*/git2.dll

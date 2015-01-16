@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 				create l_options
 				l_options.progress_action.extend (agent fetch_progress)
 				l_options.checkout_options.progress_action.extend (agent checkout_progress)
-				create l_repo.make_from_clone("https://github.com/tioui/eiffel_game_lib.git", "/home/louis/allo/game", l_options)
+				create l_repo.make_from_clone("https://github.com/tioui/eiffel_game_lib.git", "C:\Users\Louis\Documents\game", l_options)
 				if not l_repo.error.is_ok then
 					print("Error: " + l_repo.error.out + "%N")
 				else

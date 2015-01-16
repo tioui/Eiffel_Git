@@ -2,7 +2,7 @@ Eiffel_Git
 ==========
 
 A library that enable git functionnality from Eiffel code. Work with EiffelStudio. 
-Currently only the repository initialization is Working. 
+Currently only the repository initialization, openning and cloning is Working. 
 
 Installation
 ============

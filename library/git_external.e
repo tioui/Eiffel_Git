@@ -1778,52 +1778,12 @@ feature -- Constants fcntl.h
 			"O_CREAT"
 		end
 
-	frozen O_DSYNC:INTEGER
-			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
-		external
-			"C inline use <fcntl.h>"
-		alias
-			"O_DSYNC"
-		end
-
 	frozen O_EXCL:INTEGER
 			--  If O_CREAT and O_EXCL are set, open() will fail if the file exists. If O_CREAT is not set, the effect is undefined.
 		external
 			"C inline use <fcntl.h>"
 		alias
 			"O_EXCL"
-		end
-
-	frozen O_NOCTTY:INTEGER
-			--  If set and open path identifies a terminal device, open() will not cause the terminal device to become the controlling terminal for the process
-		external
-			"C inline use <fcntl.h>"
-		alias
-			"O_NOCTTY"
-		end
-
-	frozen O_NONBLOCK:INTEGER
-			--  If set, the open() function will return without blocking for the device to be ready or available. Subsequent behaviour of the device is device-specific.
-		external
-			"C inline use <fcntl.h>"
-		alias
-			"O_NONBLOCK"
-		end
-
-	frozen O_RSYNC:INTEGER
-			--  Read I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
-		external
-			"C inline use <fcntl.h>"
-		alias
-			"O_RSYNC"
-		end
-
-	frozen O_SYNC:INTEGER
-			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
-		external
-			"C inline use <fcntl.h>"
-		alias
-			"O_SYNC"
 		end
 
 	frozen O_TRUNC:INTEGER

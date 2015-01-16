@@ -3,3 +3,4 @@ EIFGENs
 libgit2
 *.o
 *.lib
+*.rc

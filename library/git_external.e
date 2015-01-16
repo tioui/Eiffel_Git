@@ -7,7 +7,51 @@ note
 class
 	GIT_EXTERNAL
 
-feature -- External functions
+feature -- External tools
+
+	frozen sizeof_pointer:INTEGER
+			-- Number of byte of a standard system pointer
+		external
+			"C inline"
+		alias
+			"sizeof(void *)"
+		end
+
+feature -- External functions <git_callback.h>
+
+	frozen git_checkout_start(object: GIT_CHECKOUT_OPTIONS; options: POINTER)
+			-- Initialize the callback of the checkout system
+		external
+			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_checkout_start"
+		end
+
+	frozen git_clone_start(object: GIT_CLONE_OPTIONS; options: POINTER)
+			-- Initialize the callback of the clone system
+		external
+			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_clone_start"
+		end
+
+	frozen git_checkout_stop(options: POINTER)
+			-- Close the callback of the checkout system
+		external
+			"C (EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_checkout_stop"
+		end
+
+	frozen git_clone_stop(options: POINTER)
+			-- Close the callback of the clone system
+		external
+			"C (EIF_POINTER) | <git_callback.h>"
+		alias
+			"git_clone_stop"
+		end
+
+feature -- External functions <git2.h>
 
 	frozen git_threads_init:INTEGER
 			-- Init the threading system
@@ -159,6 +203,54 @@ feature -- External functions
 			"C (git_repository **, const char *, unsigned int, const char *) : int | <git2.h>"
 		alias
 			"git_repository_open_ext"
+		end
+
+	frozen git_checkout_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_checkout_options` with default values
+		external
+			"C (git_checkout_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_checkout_init_options"
+		end
+
+	frozen git_clone_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_clone_options` with default values
+		external
+			"C (git_clone_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_clone_init_options"
+		end
+
+	frozen git_repository_init_init_options(opts:POINTER; version:NATURAL):INTEGER
+			-- Initializes a `git_repository_init_options` with default values
+		external
+			"C (git_repository_init_options *, unsigned int) : int | <git2.h>"
+		alias
+			"git_repository_init_init_options"
+		end
+
+	frozen git_clone(a_out, url, local_path, options:POINTER):INTEGER
+			-- Initializes a `git_repository_init_options` with default values
+		external
+			"C (git_repository **, const char *, const char *, const git_clone_options *) : int | <git2.h>"
+		alias
+			"git_clone"
+		end
+
+	frozen git_strarray_free(a_array:POINTER)
+			-- Close a string array object
+		external
+			"C (git_strarray *) | <git2.h>"
+		alias
+			"git_strarray_free"
+		end
+
+	frozen git_strarray_copy(tgt, src:POINTER):INTEGER
+			-- Close a string array object
+		external
+			"C (git_strarray *, const git_strarray *) : int | <git2.h>"
+		alias
+			"git_strarray_copy"
 		end
 
 feature -- External structures (git_repository_init_options)
@@ -316,6 +408,439 @@ feature -- External structures (git_repository_init_options)
 			"origin_url"
 		end
 
+feature -- External structures (git_checkout_options)
+
+	frozen sizeof_git_checkout_options: INTEGER
+			-- Number of byte of the C structure git_checkout_options
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_checkout_options)"
+		end
+
+	frozen git_checkout_options_set_version (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the version of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"version"
+		end
+
+	frozen git_checkout_options_get_version (struct:POINTER):NATURAL
+			-- Retreive the value of the version of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"version"
+		end
+
+	frozen git_checkout_options_set_checkout_strategy (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the checkout strategy flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"checkout_strategy"
+		end
+
+	frozen git_checkout_options_get_checkout_strategy (struct:POINTER):NATURAL
+			-- Retreive the value of the checkout strategy flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"checkout_strategy"
+		end
+
+	frozen git_checkout_options_set_disable_filters (struct: POINTER; the_value: BOOLEAN)
+			-- Assign `the_value' of the disable filters boolean of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, int)"
+		alias
+			"disable_filters"
+		end
+
+	frozen git_checkout_options_get_disable_filters (struct:POINTER):BOOLEAN
+			-- Retreive the value of the disable filters boolean of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):int"
+		alias
+			"disable_filters"
+		end
+
+	frozen git_checkout_options_set_dir_mode (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the directory mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"dir_mode"
+		end
+
+	frozen git_checkout_options_get_dir_mode (struct:POINTER):NATURAL
+			-- Retreive the value of the directory mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"dir_mode"
+		end
+
+	frozen git_checkout_options_set_file_mode (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the file mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"file_mode"
+		end
+
+	frozen git_checkout_options_get_file_mode (struct:POINTER):NATURAL
+			-- Retreive the value of the file mode of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is 0755
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"file_mode"
+		end
+
+	frozen git_checkout_options_set_file_open_flags (struct: POINTER; the_value: INTEGER)
+			-- Assign `the_value' of the file open C lib flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is O_CREAT | O_TRUNC | O_WRONLY
+		external
+			"C [struct <git2.h>] (git_checkout_options, int)"
+		alias
+			"file_open_flags"
+		end
+
+	frozen git_checkout_options_get_file_open_flags (struct:POINTER):INTEGER
+			-- Retreive the value of the file open C lib flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+			-- default is O_CREAT | O_TRUNC | O_WRONLY
+		external
+			"C [struct <git2.h>] (git_checkout_options):int"
+		alias
+			"file_open_flags"
+		end
+
+	frozen git_checkout_options_set_notify_flags (struct: POINTER; the_value: NATURAL)
+			-- Assign `the_value' of the notification (callback) system flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, unsigned int)"
+		alias
+			"notify_flags"
+		end
+
+	frozen git_checkout_options_get_notify_flags (struct:POINTER):NATURAL
+			-- Retreive the value of the notification (callback) system flags of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):unsigned int"
+		alias
+			"notify_flags"
+		end
+
+	frozen git_checkout_options_get_paths_pointer (struct:POINTER):POINTER
+			-- Retreive the pointer of the paths array of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"&(((git_checkout_options *)$struct)->paths)"
+		end
+
+	frozen git_checkout_options_set_baseline (struct, the_value: POINTER)
+			-- Assign `the_value' of the tree baseline pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, git_tree *)"
+		alias
+			"baseline"
+		end
+
+	frozen git_checkout_options_get_baseline (struct:POINTER):POINTER
+			-- Retreive the value of the tree baseline pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):git_tree *"
+		alias
+			"baseline"
+		end
+
+	frozen git_checkout_options_set_target_directory (struct, the_value: POINTER)
+			-- Assign `the_value' of the target directory name pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"target_directory"
+		end
+
+	frozen git_checkout_options_get_target_directory (struct:POINTER):POINTER
+			-- Retreive the value of the target directory name pointer of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"target_directory"
+		end
+
+	frozen git_checkout_options_set_ancestor_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the common ancestor side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"ancestor_label"
+		end
+
+	frozen git_checkout_options_get_ancestor_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the common ancestor side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"ancestor_label"
+		end
+
+	frozen git_checkout_options_set_our_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the "our" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"our_label"
+		end
+
+	frozen git_checkout_options_get_our_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the "our" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"our_label"
+		end
+
+	frozen git_checkout_options_set_their_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the "their" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"their_label"
+		end
+
+	frozen git_checkout_options_get_their_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the "their" side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"their_label"
+		end
+
+feature -- External structures (git_clone_options)
+
+	frozen sizeof_git_clone_options: INTEGER
+			-- Number of byte of the C structure git_clone_options
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_clone_options)"
+		end
+
+	frozen git_clone_options_get_checkout_opts (struct:POINTER):POINTER
+			-- Retreive a pointer to the git_checkout_options of the
+			-- git_repository_init_options structure pointed by the `struct' pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"&(((git_clone_options *)$struct)->checkout_opts)"
+		end
+
+	frozen git_clone_options_set_bare (struct: POINTER; the_value:BOOLEAN)
+			-- Set `the_value' to the bare field of the git_checkout_options pointed by `struct'
+			-- to false to create a standard repo, or non-zero for a bare repo
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"bare"
+		end
+
+	frozen git_clone_options_get_bare (struct:POINTER):BOOLEAN
+			-- Retreive the bare field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"bare"
+		end
+
+	frozen git_clone_options_set_ignore_cert_errors (struct: POINTER; the_value:BOOLEAN)
+			-- Set `the_value' to the ignore_cert_errors field of the git_checkout_options pointed by `struct'
+			-- to false to create a standard repo, or non-zero for a bare repo
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"ignore_cert_errors"
+		end
+
+	frozen git_clone_options_get_ignore_cert_errors (struct:POINTER):BOOLEAN
+			-- Retreive the ignore_cert_errors field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"ignore_cert_errors"
+		end
+
+	frozen git_clone_options_set_local (struct: POINTER; the_value:INTEGER)
+			-- Set `the_value' to the local field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"local"
+		end
+
+	frozen git_clone_options_get_local (struct:POINTER):INTEGER
+			-- Retreive the local field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"local"
+		end
+
+	frozen git_clone_options_set_remote_name (struct, the_value: POINTER)
+			-- Set `the_value' to the remote_name field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, const char *)"
+		alias
+			"remote_name"
+		end
+
+	frozen git_clone_options_get_remote_name (struct:POINTER):POINTER
+			-- Retreive the remote_name field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):const char *"
+		alias
+			"remote_name"
+		end
+
+	frozen git_clone_options_set_checkout_branch (struct, the_value: POINTER)
+			-- Set `the_value' to the checkout_branch field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, const char *)"
+		alias
+			"checkout_branch"
+		end
+
+	frozen git_clone_options_get_checkout_branch (struct:POINTER):POINTER
+			-- Retreive the checkout_branch field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):const char *"
+		alias
+			"checkout_branch"
+		end
+
+	frozen git_clone_options_set_signature (struct, the_value: POINTER)
+			-- Set `the_value' to the signature field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, git_signature *)"
+		alias
+			"signature"
+		end
+
+	frozen git_clone_options_get_signature (struct:POINTER):POINTER
+			-- Retreive the signature field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):git_signature *"
+		alias
+			"signature"
+		end
+
+feature -- External structures (git_transfer_options)
+
+	frozen sizeof_git_transfer_progress: INTEGER
+			-- Number of byte of the C structure git_transfer_progress
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_transfer_progress)"
+		end
+
+	frozen git_transfer_progress_get_total_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have to be retreive of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"total_objects"
+		end
+
+	frozen git_transfer_progress_get_indexed_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have been downloaded and has been
+			-- hashed of the git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"indexed_objects"
+		end
+
+	frozen git_transfer_progress_get_received_objects (struct:POINTER):NATURAL
+			-- Retreive the number of object that have already been retreived of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"received_objects"
+		end
+
+	frozen git_transfer_progress_get_local_objects (struct:POINTER):NATURAL
+			-- Retreive the number of locally-available objects of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"local_objects"
+		end
+
+	frozen git_transfer_progress_get_total_deltas (struct:POINTER):NATURAL
+			-- Retreive the total delta value of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"total_deltas"
+		end
+
+	frozen git_transfer_progress_get_indexed_deltas (struct:POINTER):NATURAL
+			-- Retreive the number of delta value that has been received and hashed of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):unsigned int"
+		alias
+			"indexed_deltas"
+		end
+
+	frozen git_transfer_progress_get_received_bytes (struct:POINTER):INTEGER_64
+			-- Retreive the number of bytes that has been received of the
+			-- git_transfer_progress structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_transfer_progress):size_t"
+		alias
+			"received_bytes"
+		end
+
+
+
 feature -- External structures (git_error)
 
 	frozen sizeof_git_error: INTEGER
@@ -375,6 +900,77 @@ feature -- External structures (git_buf)
 			"C [struct <git2.h>] (git_buf):size_t"
 		alias
 			"asize"
+		end
+
+feature -- External structure (git_repository)
+
+	frozen deferencing_git_repository_pointer(repopointer:POINTER):POINTER
+			-- Number of byte of a standard system pointer
+		external
+			"C inline use <git2.h>"
+		alias
+			"*((git_repository **) $repopointer)"
+		end
+
+
+feature -- External structures (git_strarray)
+
+	frozen sizeof_git_strarray: INTEGER
+			-- Number of byte of the C structure git_strarray
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_strarray)"
+		end
+
+	frozen git_strarray_get_count (struct:POINTER):INTEGER_64
+			-- Number of string include in the git_strarray
+		external
+			"C [struct <git2.h>] (git_strarray):size_t"
+		alias
+			"count"
+		end
+
+	frozen git_strarray_set_count (struct: POINTER; the_value:INTEGER_64)
+			-- Assign `the_value' of the the string count of the
+			-- git_strarray structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_strarray, size_t)"
+		alias
+			"count"
+		end
+
+	frozen git_strarray_get_strings (struct:POINTER):POINTER
+			-- Number of string include in the git_strarray
+		external
+			"C [struct <git2.h>] (git_strarray):char **"
+		alias
+			"strings"
+		end
+
+	frozen git_strarray_set_strings (struct, the_value: POINTER)
+			-- Assign `the_value' of the the strings pointer of the
+			-- git_strarray structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_strarray, char **)"
+		alias
+			"strings"
+		end
+
+	frozen git_strarray_get_string_i(struct:POINTER; i:INTEGER): POINTER
+			-- Get the string at index `i' in the git_strarray structure `struct'
+		external
+			"C inline use <git2.h>"
+		alias
+			"((git_strarray *)$struct)->strings[$i]"
+		end
+
+	frozen git_strarray_set_string_i(struct:POINTER; i:INTEGER; str:POINTER)
+			-- Set the string `str' at index `i' in the git_strarray structure `struct'
+		external
+			"C inline use <git2.h>"
+		alias
+			"((git_strarray *)$struct)->strings[$i] = $str"
 		end
 
 feature -- External constants
@@ -946,6 +1542,297 @@ feature -- External constants
 			"C inline use <git2.h>"
 		alias
 			"GIT_PATH_LIST_SEPARATOR"
+		end
+
+	frozen GIT_CHECKOUT_OPTIONS_VERSION:NATURAL
+			-- The version of the latest `git_checkout_options' structure
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_OPTIONS_VERSION"
+		end
+
+	frozen GIT_CLONE_OPTIONS_VERSION:NATURAL
+			-- The version of the latest `git_clone_options' structure
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_OPTIONS_VERSION"
+		end
+
+	frozen GIT_CHECKOUT_NONE:NATURAL
+			-- default is a dry run, no actual updates
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_NONE"
+		end
+
+	frozen GIT_CHECKOUT_SAFE:NATURAL
+			-- Allow safe updates that cannot overwrite uncommitted data
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SAFE"
+		end
+
+	frozen GIT_CHECKOUT_SAFE_CREATE:NATURAL
+			-- Allow safe updates plus creation of missing files
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SAFE_CREATE"
+		end
+
+	frozen GIT_CHECKOUT_FORCE:NATURAL
+			-- Allow all updates to force working directory to look like index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_FORCE"
+		end
+
+	frozen GIT_CHECKOUT_ALLOW_CONFLICTS:NATURAL
+			-- Allow checkout to make safe updates even if conflicts are found
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_ALLOW_CONFLICTS"
+		end
+
+	frozen GIT_CHECKOUT_REMOVE_UNTRACKED:NATURAL
+			-- Remove untracked files not in index (that are not ignored)
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_REMOVE_UNTRACKED"
+		end
+
+	frozen GIT_CHECKOUT_REMOVE_IGNORED:NATURAL
+			-- Remove ignored files not in index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_REMOVE_IGNORED"
+		end
+
+	frozen GIT_CHECKOUT_UPDATE_ONLY:NATURAL
+			-- Only update existing files, don't create new ones
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_UPDATE_ONLY"
+		end
+
+	frozen GIT_CHECKOUT_DONT_UPDATE_INDEX:NATURAL
+			-- Normally checkout updates index entries as it goes; this stops that
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DONT_UPDATE_INDEX"
+		end
+
+	frozen GIT_CHECKOUT_NO_REFRESH:NATURAL
+			-- Don't refresh index/config/etc before doing checkout
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_NO_REFRESH"
+		end
+
+	frozen GIT_CHECKOUT_SKIP_UNMERGED:NATURAL
+			-- Allow checkout to skip unmerged files
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SKIP_UNMERGED"
+		end
+
+	frozen GIT_CHECKOUT_USE_OURS:NATURAL
+			-- For unmerged files, checkout stage 2 from index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_USE_OURS"
+		end
+
+	frozen GIT_CHECKOUT_USE_THEIRS:NATURAL
+			-- For unmerged files, checkout stage 3 from index
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_USE_THEIRS"
+		end
+
+	frozen GIT_CHECKOUT_DISABLE_PATHSPEC_MATCH:NATURAL
+			-- Treat pathspec as simple list of exact match file paths
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DISABLE_PATHSPEC_MATCH"
+		end
+
+	frozen GIT_CHECKOUT_SKIP_LOCKED_DIRECTORIES:NATURAL
+			-- Ignore directories in use, they will be left empty
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_SKIP_LOCKED_DIRECTORIES"
+		end
+
+	frozen GIT_CHECKOUT_DONT_OVERWRITE_IGNORED:NATURAL
+			-- Don't overwrite ignored files that exist in the checkout target
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_DONT_OVERWRITE_IGNORED"
+		end
+
+	frozen GIT_CHECKOUT_CONFLICT_STYLE_MERGE:NATURAL
+			--  Write normal merge files for conflicts
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_CONFLICT_STYLE_MERGE"
+		end
+
+	frozen GIT_CHECKOUT_CONFLICT_STYLE_DIFF3:NATURAL
+			--  Include common ancestor data in diff3 format files for conflicts
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CHECKOUT_CONFLICT_STYLE_DIFF3"
+		end
+
+	frozen GIT_CLONE_LOCAL_AUTO:INTEGER
+			-- Auto-detect Bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL_AUTO"
+		end
+
+	frozen GIT_CLONE_LOCAL:INTEGER
+			-- Bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL"
+		end
+
+	frozen GIT_CLONE_NO_LOCAL:INTEGER
+			-- Do no bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_NO_LOCAL"
+		end
+
+	frozen GIT_CLONE_LOCAL_NO_LINKS:INTEGER
+			-- Bypass the git-aware transport, but do not try to use hardlinks
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL_NO_LINKS"
+		end
+
+feature -- Constants fcntl.h
+
+	frozen O_RDONLY:INTEGER
+			--  Open for reading only
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RDONLY"
+		end
+
+	frozen O_WRONLY:INTEGER
+			--  Open for writing only
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_WRONLY"
+		end
+
+	frozen O_RDWR:INTEGER
+			--  Open for reading and writing. The result is undefined if this flag is applied to a FIFO
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RDWR"
+		end
+
+	frozen O_APPEND:INTEGER
+			--  If set, the file offset will be set to the end of the file prior to each write
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_APPEND"
+		end
+
+	frozen O_CREAT:INTEGER
+			--  If the file exists, this flag has no effect except as noted under O_EXCL below. Otherwise, the file is created
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_CREAT"
+		end
+
+	frozen O_DSYNC:INTEGER
+			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_DSYNC"
+		end
+
+	frozen O_EXCL:INTEGER
+			--  If O_CREAT and O_EXCL are set, open() will fail if the file exists. If O_CREAT is not set, the effect is undefined.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_EXCL"
+		end
+
+	frozen O_NOCTTY:INTEGER
+			--  If set and open path identifies a terminal device, open() will not cause the terminal device to become the controlling terminal for the process
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_NOCTTY"
+		end
+
+	frozen O_NONBLOCK:INTEGER
+			--  If set, the open() function will return without blocking for the device to be ready or available. Subsequent behaviour of the device is device-specific.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_NONBLOCK"
+		end
+
+	frozen O_RSYNC:INTEGER
+			--  Read I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RSYNC"
+		end
+
+	frozen O_SYNC:INTEGER
+			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_SYNC"
+		end
+
+	frozen O_TRUNC:INTEGER
+			-- If the file exists and is a regular file, and the file is successfully opened O_RDWR or O_WRONLY,
+			-- its length is truncated to 0 and the mode and owner are unchanged.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_TRUNC"
 		end
 
 end

@@ -15,7 +15,8 @@ inherit
 
 create
 	make_and_initialize,
-	make_and_open
+	make_and_open,
+	make_from_clone
 
 feature {NONE} -- Initialization
 
@@ -28,10 +29,13 @@ feature {NONE} -- Initialization
 		local
 			l_c_path:C_STRING
 			l_error:INTEGER
+			l_indirect_repository:POINTER
 		do
 			default_create
 			create l_c_path.make (a_folder_name)
-			l_error := {GIT_EXTERNAL}.git_repository_init_ext($item, l_c_path.item, a_options.item)
+			l_indirect_repository := l_indirect_repository.memory_calloc (1, {GIT_EXTERNAL}.sizeof_pointer)
+			l_error := {GIT_EXTERNAL}.git_repository_init_ext(l_indirect_repository, l_c_path.item, a_options.item)
+			item := {GIT_EXTERNAL}.deferencing_git_repository_pointer (l_indirect_repository)
 			error.set_code (l_error)
 		ensure
 			Success_Initialized: error.is_ok implies is_open
@@ -48,6 +52,7 @@ feature {NONE} -- Initialization
 			l_path_list:READABLE_STRING_GENERAL
 			l_path_separator:STRING
 			l_c_list:C_STRING
+			l_indirect_repository:POINTER
 		do
 			default_create
 			create l_path_separator.make_filled ({GIT_EXTERNAL}.GIT_PATH_LIST_SEPARATOR, 1)
@@ -61,7 +66,30 @@ feature {NONE} -- Initialization
 			end
 			create l_c_path.make (a_folder_name)
 			create l_c_list.make (l_path_list)
-			l_error := {GIT_EXTERNAL}.git_repository_open_ext($item, l_c_path.item, a_options.code, l_c_list.item)
+			l_indirect_repository := l_indirect_repository.memory_calloc (1, {GIT_EXTERNAL}.sizeof_pointer)
+			l_error := {GIT_EXTERNAL}.git_repository_open_ext(l_indirect_repository, l_c_path.item, a_options.code, l_c_list.item)
+			item := {GIT_EXTERNAL}.deferencing_git_repository_pointer (l_indirect_repository)
+			error.set_code (l_error)
+		ensure
+			Success_Opened: error.is_ok implies is_open
+		end
+
+	make_from_clone(a_url, a_path:READABLE_STRING_GENERAL;a_options:GIT_CLONE_OPTIONS)
+			-- Cloning a remote repository from `a_url' to the local directory `a_path' using
+			-- the clone options `a_options' and open the local repository.
+		local
+			l_c_url, l_c_path:C_STRING
+			l_error : INTEGER
+			l_indirect_repository:POINTER
+		do
+			default_create
+			create l_c_path.make (a_path)
+			create l_c_url.make (a_url)
+			a_options.start_callback
+			l_indirect_repository := l_indirect_repository.memory_calloc (1, {GIT_EXTERNAL}.sizeof_pointer)
+			l_error := {GIT_EXTERNAL}.git_clone(l_indirect_repository, l_c_url.item, l_c_path.item, a_options.item)
+			item := {GIT_EXTERNAL}.deferencing_git_repository_pointer (l_indirect_repository)
+			a_options.stop_callback
 			error.set_code (l_error)
 		ensure
 			Success_Opened: error.is_ok implies is_open
@@ -85,8 +113,6 @@ feature -- Access
 		ensure
 			Close_Is_Close: not is_open
 		end
-
-
 
 	is_open:BOOLEAN
 			-- Is `Current' openned for manipulation
@@ -154,6 +180,8 @@ feature -- Access
 		end
 
 	is_bare:BOOLEAN
+			-- True if `Current' is a bare repository
+			-- A bare repository is a repository without working directories
 		require
 			Repository_Is_Open: is_open
 		do
@@ -331,19 +359,13 @@ feature -- Access
 		require
 			Repository_Is_Open: is_open
 		local
-			l_error:INTEGER
 			l_c_string:C_STRING
 		do
 			create l_c_string.make (a_namespace)
-			l_error := {GIT_EXTERNAL}.git_repository_set_namespace(item, l_c_string.item)
-			error.set_code (l_error)
+			error.set_code ({GIT_EXTERNAL}.git_repository_set_namespace(item, l_c_string.item))
 		ensure
 			Is_Set: error.is_ok implies namespace ~ a_namespace
 		end
-
-
-
-
 
 	error:GIT_ERROR
 			-- The last error that has append in the internal library when managing `Current'

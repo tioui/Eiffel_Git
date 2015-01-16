@@ -29,34 +29,43 @@ feature {NONE} -- Initialization
 			-- Initialization of `Current'
 		do
 			make
-			set_version({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_OPTIONS_VERSION)
-			set_flags (0)
-			set_working_path_name(Void)
-			set_template_path_name(Void)
-			set_description(Void)
-			set_initial_head(Void)
-			set_origin_url(Void)
-			unset_bare
-			unset_reinitialize
-			set_dot_git
-			unset_make_working_directory
-			unset_make_working_path
-			unset_external_template
-			set_umask_mode
+			create error.make_with_code({GIT_EXTERNAL}.git_repository_init_init_options(item, {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_OPTIONS_VERSION))
+			if is_valid then
+				set_flags (0)
+				set_working_path_name(Void)
+				set_template_path_name(Void)
+				set_description(Void)
+				set_initial_head(Void)
+				set_origin_url(Void)
+				disable_bare
+				disable_reinitialize
+				enable_dot_git
+				disable_make_working_directory
+				disable_make_working_path
+				disable_external_template
+				enable_umask_mode
+			end
+		ensure then
+			No_Error_Implies_Valid: error.is_ok implies is_valid
 		end
 
 feature -- Access
 
-	version:NATURAL
-			-- The version of the internal format of `Current'
+	is_valid:BOOLEAN
+			-- Is `Current' in a valid (usable) state
 		do
-			Result := {GIT_EXTERNAL}.git_repository_init_options_get_version(item)
+			Result := not item.is_default_pointer
 		end
+
+	error:GIT_ERROR
+			-- The last error that has append in the internal library when managing `Current'
 
 	working_path_name:detachable READABLE_STRING_GENERAL assign set_working_path_name
 			-- Path to the working dir or Void for default
 			-- (i.e. repo_path parent on non-bare repos)
 			-- IF THIS IS RELATIVE PATH, IT WILL BE EVALUATED RELATIVE TO THE REPO_PATH.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -70,6 +79,8 @@ feature -- Access
 
 	set_working_path_name(a_working_path_name:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_working_path_name' to `working_path_name'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -88,6 +99,8 @@ feature -- Access
 	template_path_name:detachable READABLE_STRING_GENERAL assign set_template_path_name
 			-- Path to use for the template directory. If this is NULL,
 			-- the config or default directory options will be used instead.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -101,6 +114,8 @@ feature -- Access
 
 	set_template_path_name(a_template_path_name:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_template_path_name' to `template_path_name'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -119,6 +134,8 @@ feature -- Access
 	description:detachable READABLE_STRING_GENERAL assign set_description
 			-- If not Void, this will be used to initialize the "description"
 			-- file in the repository, instead of using the template content.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -132,6 +149,8 @@ feature -- Access
 
 	set_description(a_description:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_description' to `description'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -151,6 +170,8 @@ feature -- Access
 			-- The name of the head to point HEAD at. If Void, then this will be treated as
 			-- "master" and the HEAD ref will be set to "refs/heads/master". If this begins
 			-- with "refs/" it will be used verbatim; otherwise "refs/heads/" will be prefixed.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -164,6 +185,8 @@ feature -- Access
 
 	set_initial_head(a_initial_head:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_initial_head' to `initial_head'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -182,6 +205,8 @@ feature -- Access
 	origin_url:detachable READABLE_STRING_GENERAL assign set_origin_url
 			-- If this is non-Void, then after the rest of the repository initialization
 			-- is completed, an "origin" remote will be added pointing to this URL.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -195,6 +220,8 @@ feature -- Access
 
 	set_origin_url(a_origin_url:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_origin_url' to `origin_url'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -213,20 +240,26 @@ feature -- Access
 	is_bare:BOOLEAN
 			-- If set, a bare repository with no working directory will be created
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE) /= 0
 		end
 
-	set_bare
+	enable_bare
 			-- Active `is_bare'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE))
 		ensure
 			Is_Set: is_bare
 		end
 
-	unset_bare
+	disable_bare
 			-- Desactive `is_bare'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE.bit_not))
 		ensure
@@ -237,12 +270,16 @@ feature -- Access
 			-- If not set, give an error if the repo_path
 			-- appears to already be an git repository
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT)) = 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT) = 0
 		end
 
-	set_reinitialize
+	enable_reinitialize
 			-- Active `can_reinitialize'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT.bit_not))
 
@@ -250,8 +287,10 @@ feature -- Access
 			Is_Set: can_reinitialize
 		end
 
-	unset_reinitialize
+	disable_reinitialize
 			-- Desactive `can_reinitialize'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT))
 		ensure
@@ -262,20 +301,26 @@ feature -- Access
 			-- Normally a ".git" will be appended to the repo path. Unset this to
 			-- prevents that behavior.
 			-- Default value: True
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR)) = 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR) = 0
 		end
 
-	set_dot_git
+	enable_dot_git
 			-- Active `use_dot_git'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR.bit_not))
 		ensure
 			Is_Set: use_dot_git
 		end
 
-	unset_dot_git
+	disable_dot_git
 			-- Desactive `use_dot_git'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR))
 		ensure
@@ -285,20 +330,26 @@ feature -- Access
 	must_make_working_directory:BOOLEAN
 			-- Make the repo_path (and workdir_path) as needed
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR) /= 0
 		end
 
-	set_make_working_directory
+	enable_make_working_directory
 			-- Active `must_make_working_directory'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR))
 		ensure
 			Is_Set: must_make_working_directory
 		end
 
-	unset_make_working_directory
+	disable_make_working_directory
 			-- Desactive `must_make_working_directory'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR.bit_not))
 		ensure
@@ -308,20 +359,26 @@ feature -- Access
 	must_make_working_path:BOOLEAN
 			-- Recursively make the repo_path (and workdir_path) as needed
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH) /= 0
 		end
 
-	set_make_working_path
+	enable_make_working_path
 			-- Active `must_make_working_path'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH))
 		ensure
 			Is_Set: must_make_working_path
 		end
 
-	unset_make_working_path
+	disable_make_working_path
 			-- Desactive `must_make_working_path'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH.bit_not))
 		ensure
@@ -333,20 +390,26 @@ feature -- Access
 			-- if not Void, or the `init.templatedir` global config, or falling
 			-- back on "/usr/share/git-core/templates" if it exists.
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
-			Result := (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE)) /= 0
+			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE) /= 0
 		end
 
-	set_external_template
+	enable_external_template
 			-- Active `use_external_template'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE))
 		ensure
 			Is_Set: use_external_template
 		end
 
-	unset_external_template
+	disable_external_template
 			-- Desactive `use_external_template'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE.bit_not))
 		ensure
@@ -356,70 +419,86 @@ feature -- Access
 	use_umask_mode:BOOLEAN
 			-- Use permissions configured by umask
 			-- This is the default value.
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK
 		end
 
-	set_umask_mode
+	enable_umask_mode
 			-- Activate `use_umask_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK)
 		ensure
 			Is_Set: use_umask_mode
+			Is_Group_Unset: not use_group_mode
+			Is_World_Unset: not use_world_mode
 		end
 
 	use_group_mode:BOOLEAN
 			-- Change the new repo mode to be group writable
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP
 		end
 
-	set_group_mode
+	enable_group_mode
 			-- Activate `use_group_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP)
 		ensure
 			Is_Set: use_group_mode
+			Is_Umask_Unset: not use_umask_mode
+			Is_World_Unset: not use_world_mode
 		end
 
 	use_world_mode:BOOLEAN
 			-- Change the new repo mode to be group writable (like `use_group_mode') and world readable
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL
 		end
 
-	set_world_mode
+	enable_world_mode
 			-- Activate `use_world_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL)
 		ensure
 			Is_Set: use_world_mode
+			Is_Umask_Unset: not use_umask_mode
+			Is_Group_Unset: not use_group_mode
 		end
 
 feature {NONE} -- Implementation
 
 	flags:NATURAL_32
 			-- The internal combination of GIT_REPOSITORY_INIT flags
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_flags(item)
 		end
 
 	mode:NATURAL_32
 			-- One of the internal GIT_REPOSITORY_INIT_SHARED_... constants
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_mode(item)
 		end
 
-	set_version(a_version:NATURAL)
-			-- Assign `version' with the value of `a_version'
-		do
-			{GIT_EXTERNAL}.git_repository_init_options_set_version(item, a_version)
-		ensure
-			Is_Assign: version ~ a_version
-		end
-
 	set_flags(a_flags:NATURAL)
 			-- Assign `flags' with the value of `a_flags'
+		require
+			Current_Is_Valid: is_valid
 		do
 			{GIT_EXTERNAL}.git_repository_init_options_set_flags(item, a_flags)
 		ensure
@@ -428,6 +507,8 @@ feature {NONE} -- Implementation
 
 	set_mode(a_mode:NATURAL)
 			-- Assign `mode' with the value of `a_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			{GIT_EXTERNAL}.git_repository_init_options_set_mode(item, a_mode)
 		ensure

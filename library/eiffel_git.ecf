@@ -40,6 +40,39 @@
 				<custom name="ISE_C_COMPILER" value="msc"/>
 			</condition>
 		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)/contrib/library/git/library/spec/$(ISE_PLATFORM)/lib/git_callback.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)/contrib/library/git/library/spec/$(ISE_PLATFORM)/lib/MTgit_callback.o">
+			<condition>
+				<platform excluded_value="windows"/>
+				<concurrency excluded_value="none"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\library\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\git_callback.lib">
+			<condition>
+				<platform value="windows"/>
+				<concurrency value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\library\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\mtgit_callback.lib">
+			<condition>
+				<platform value="windows"/>
+				<concurrency excluded_value="none"/>
+				<dotnet value="false"/>
+			</condition>
+		</external_object>
+		<external_object location="$(EIFFEL_LIBRARY)\contrib\library\git\library\spec\$(ISE_C_COMPILER)\$(ISE_PLATFORM)\lib\ilgit_callback.lib">
+			<condition>
+				<platform value="windows"/>
+				<dotnet value="true"/>
+			</condition>
+		</external_object>
+		<external_include location="$(EIFFEL_LIBRARY)/contrib/library/git/library/spec/include"/>
 		<external_include location="$(EIFFEL_LIBRARY)\contrib\library\git\libgit2\include">
 			<condition>
 				<platform value="windows"/>
@@ -47,8 +80,12 @@
 		</external_include>
 		<library name="base" location="$ISE_LIBRARY\library\base\base-safe.ecf"/>
 		<cluster name="eiffel_git" location=".\" recursive="true">
+			<visible class="GIT_CLONE_OPTIONS" feature="progress"/>
+			<visible class="GIT_CHECKOUT_OPTIONS" feature="progress"/>
 			<file_rule>
 				<exclude>/.git$</exclude>
+				<exclude>/Clib$</exclude>
+				<exclude>/spec$</exclude>
 				<exclude>/EIFGENs$</exclude>
 				<exclude>/CVS$</exclude>
 				<exclude>/.svn$</exclude>

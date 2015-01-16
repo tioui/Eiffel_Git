@@ -18,11 +18,8 @@ feature {NONE} -- Initialization
 
 	make
 			-- Initialize the git system for the application
-		local
-			l_error:INTEGER
 		do
-			l_error := {GIT_EXTERNAL}.git_threads_init
-			create error.make_with_code(l_error)
+			create error.make_with_code({GIT_EXTERNAL}.git_threads_init)
 			is_git_initialized := True
 		end
 

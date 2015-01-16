@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 			Precursor {GIT_APPLICATION}
 			if error.is_ok then
 				create l_options
-				l_options.set_make_working_path
+				l_options.enable_make_working_path
 				l_options.description := "Description du super repo... HÈHÈHÈ."
 				create l_repo.make_and_initialize ("/home/louis/allo/bleh", l_options)
 				if not l_repo.error.is_ok then

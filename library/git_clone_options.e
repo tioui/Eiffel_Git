@@ -247,7 +247,7 @@ feature {GIT_REPOSITORY} -- Implementation
 			-- After the clone, the procedure `stop_callback' must be called.
 		do
 			if not progress_action.is_empty then
-				{GIT_EXTERNAL}.git_fetch_start (Current, item)
+				{GIT_EXTERNAL}.git_clone_start (Current, item)
 				is_callback_initialize := True
 			end
 			checkout_options.start_callback
@@ -259,7 +259,7 @@ feature {GIT_REPOSITORY} -- Implementation
 			-- happend.
 		do
 			if is_callback_initialize then
-				{GIT_EXTERNAL}.git_fetch_stop (item)
+				{GIT_EXTERNAL}.git_clone_stop (item)
 				is_callback_initialize := False
 			end
 			checkout_options.stop_callback

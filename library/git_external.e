@@ -27,12 +27,12 @@ feature -- External functions <git_callback.h>
 			"git_checkout_start"
 		end
 
-	frozen git_fetch_start(object: GIT_CLONE_OPTIONS; options: POINTER)
-			-- Initialize the callback of the fetch system
+	frozen git_clone_start(object: GIT_CLONE_OPTIONS; options: POINTER)
+			-- Initialize the callback of the clone system
 		external
 			"C (EIF_OBJECT, EIF_POINTER) | <git_callback.h>"
 		alias
-			"git_fetch_start"
+			"git_clone_start"
 		end
 
 	frozen git_checkout_stop(options: POINTER)
@@ -43,12 +43,12 @@ feature -- External functions <git_callback.h>
 			"git_checkout_stop"
 		end
 
-	frozen git_fetch_stop(options: POINTER)
-			-- Close the callback of the fetch system
+	frozen git_clone_stop(options: POINTER)
+			-- Close the callback of the clone system
 		external
 			"C (EIF_POINTER) | <git_callback.h>"
 		alias
-			"git_fetch_stop"
+			"git_clone_stop"
 		end
 
 feature -- External functions <git2.h>

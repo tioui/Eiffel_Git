@@ -64,6 +64,8 @@ feature -- Access
 			-- Path to the working dir or Void for default
 			-- (i.e. repo_path parent on non-bare repos)
 			-- IF THIS IS RELATIVE PATH, IT WILL BE EVALUATED RELATIVE TO THE REPO_PATH.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -77,6 +79,8 @@ feature -- Access
 
 	set_working_path_name(a_working_path_name:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_working_path_name' to `working_path_name'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -95,6 +99,8 @@ feature -- Access
 	template_path_name:detachable READABLE_STRING_GENERAL assign set_template_path_name
 			-- Path to use for the template directory. If this is NULL,
 			-- the config or default directory options will be used instead.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -108,6 +114,8 @@ feature -- Access
 
 	set_template_path_name(a_template_path_name:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_template_path_name' to `template_path_name'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -126,6 +134,8 @@ feature -- Access
 	description:detachable READABLE_STRING_GENERAL assign set_description
 			-- If not Void, this will be used to initialize the "description"
 			-- file in the repository, instead of using the template content.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -139,6 +149,8 @@ feature -- Access
 
 	set_description(a_description:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_description' to `description'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -158,6 +170,8 @@ feature -- Access
 			-- The name of the head to point HEAD at. If Void, then this will be treated as
 			-- "master" and the HEAD ref will be set to "refs/heads/master". If this begins
 			-- with "refs/" it will be used verbatim; otherwise "refs/heads/" will be prefixed.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -171,6 +185,8 @@ feature -- Access
 
 	set_initial_head(a_initial_head:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_initial_head' to `initial_head'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -189,6 +205,8 @@ feature -- Access
 	origin_url:detachable READABLE_STRING_GENERAL assign set_origin_url
 			-- If this is non-Void, then after the rest of the repository initialization
 			-- is completed, an "origin" remote will be added pointing to this URL.
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_pointer:POINTER
 		do
@@ -202,6 +220,8 @@ feature -- Access
 
 	set_origin_url(a_origin_url:detachable READABLE_STRING_GENERAL)
 			-- Assign `a_origin_url' to `origin_url'
+		require
+			Current_Is_Valid: is_valid
 		local
 			l_c_string:C_STRING
 		do
@@ -220,12 +240,16 @@ feature -- Access
 	is_bare:BOOLEAN
 			-- If set, a bare repository with no working directory will be created
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE) /= 0
 		end
 
 	enable_bare
 			-- Active `is_bare'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE))
 		ensure
@@ -234,6 +258,8 @@ feature -- Access
 
 	disable_bare
 			-- Desactive `is_bare'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_BARE.bit_not))
 		ensure
@@ -244,12 +270,16 @@ feature -- Access
 			-- If not set, give an error if the repo_path
 			-- appears to already be an git repository
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT) = 0
 		end
 
 	enable_reinitialize
 			-- Active `can_reinitialize'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT.bit_not))
 
@@ -259,6 +289,8 @@ feature -- Access
 
 	disable_reinitialize
 			-- Desactive `can_reinitialize'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_REINIT))
 		ensure
@@ -269,12 +301,16 @@ feature -- Access
 			-- Normally a ".git" will be appended to the repo path. Unset this to
 			-- prevents that behavior.
 			-- Default value: True
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR) = 0
 		end
 
 	enable_dot_git
 			-- Active `use_dot_git'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR.bit_not))
 		ensure
@@ -283,6 +319,8 @@ feature -- Access
 
 	disable_dot_git
 			-- Desactive `use_dot_git'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_NO_DOTGIT_DIR))
 		ensure
@@ -292,12 +330,16 @@ feature -- Access
 	must_make_working_directory:BOOLEAN
 			-- Make the repo_path (and workdir_path) as needed
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR) /= 0
 		end
 
 	enable_make_working_directory
 			-- Active `must_make_working_directory'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR))
 		ensure
@@ -306,6 +348,8 @@ feature -- Access
 
 	disable_make_working_directory
 			-- Desactive `must_make_working_directory'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKDIR.bit_not))
 		ensure
@@ -315,12 +359,16 @@ feature -- Access
 	must_make_working_path:BOOLEAN
 			-- Recursively make the repo_path (and workdir_path) as needed
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH) /= 0
 		end
 
 	enable_make_working_path
 			-- Active `must_make_working_path'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH))
 		ensure
@@ -329,6 +377,8 @@ feature -- Access
 
 	disable_make_working_path
 			-- Desactive `must_make_working_path'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_MKPATH.bit_not))
 		ensure
@@ -340,12 +390,16 @@ feature -- Access
 			-- if not Void, or the `init.templatedir` global config, or falling
 			-- back on "/usr/share/git-core/templates" if it exists.
 			-- Default value: False
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE) /= 0
 		end
 
 	enable_external_template
 			-- Active `use_external_template'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_or ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE))
 		ensure
@@ -354,6 +408,8 @@ feature -- Access
 
 	disable_external_template
 			-- Desactive `use_external_template'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_flags (flags.bit_and ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_EXTERNAL_TEMPLATE.bit_not))
 		ensure
@@ -363,12 +419,16 @@ feature -- Access
 	use_umask_mode:BOOLEAN
 			-- Use permissions configured by umask
 			-- This is the default value.
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK
 		end
 
 	enable_umask_mode
 			-- Activate `use_umask_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_UMASK)
 		ensure
@@ -379,12 +439,16 @@ feature -- Access
 
 	use_group_mode:BOOLEAN
 			-- Change the new repo mode to be group writable
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP
 		end
 
 	enable_group_mode
 			-- Activate `use_group_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_GROUP)
 		ensure
@@ -395,12 +459,16 @@ feature -- Access
 
 	use_world_mode:BOOLEAN
 			-- Change the new repo mode to be group writable (like `use_group_mode') and world readable
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := mode ~ {GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL
 		end
 
 	enable_world_mode
 			-- Activate `use_world_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			set_mode ({GIT_EXTERNAL}.GIT_REPOSITORY_INIT_SHARED_ALL)
 		ensure
@@ -413,18 +481,24 @@ feature {NONE} -- Implementation
 
 	flags:NATURAL_32
 			-- The internal combination of GIT_REPOSITORY_INIT flags
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_flags(item)
 		end
 
 	mode:NATURAL_32
 			-- One of the internal GIT_REPOSITORY_INIT_SHARED_... constants
+		require
+			Current_Is_Valid: is_valid
 		do
 			Result := {GIT_EXTERNAL}.git_repository_init_options_get_mode(item)
 		end
 
 	set_flags(a_flags:NATURAL)
 			-- Assign `flags' with the value of `a_flags'
+		require
+			Current_Is_Valid: is_valid
 		do
 			{GIT_EXTERNAL}.git_repository_init_options_set_flags(item, a_flags)
 		ensure
@@ -433,6 +507,8 @@ feature {NONE} -- Implementation
 
 	set_mode(a_mode:NATURAL)
 			-- Assign `mode' with the value of `a_mode'
+		require
+			Current_Is_Valid: is_valid
 		do
 			{GIT_EXTERNAL}.git_repository_init_options_set_mode(item, a_mode)
 		ensure

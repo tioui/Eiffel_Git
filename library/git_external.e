@@ -668,6 +668,104 @@ feature -- External structures (git_clone_options)
 			"&(((git_clone_options *)$struct)->checkout_opts)"
 		end
 
+	frozen git_clone_options_set_bare (struct: POINTER; the_value:BOOLEAN)
+			-- Set `the_value' to the bare field of the git_checkout_options pointed by `struct'
+			-- to false to create a standard repo, or non-zero for a bare repo
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"bare"
+		end
+
+	frozen git_clone_options_get_bare (struct:POINTER):BOOLEAN
+			-- Retreive the bare field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"bare"
+		end
+
+	frozen git_clone_options_set_ignore_cert_errors (struct: POINTER; the_value:BOOLEAN)
+			-- Set `the_value' to the ignore_cert_errors field of the git_checkout_options pointed by `struct'
+			-- to false to create a standard repo, or non-zero for a bare repo
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"ignore_cert_errors"
+		end
+
+	frozen git_clone_options_get_ignore_cert_errors (struct:POINTER):BOOLEAN
+			-- Retreive the ignore_cert_errors field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"ignore_cert_errors"
+		end
+
+	frozen git_clone_options_set_local (struct: POINTER; the_value:INTEGER)
+			-- Set `the_value' to the local field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, int)"
+		alias
+			"local"
+		end
+
+	frozen git_clone_options_get_local (struct:POINTER):INTEGER
+			-- Retreive the local field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):int"
+		alias
+			"local"
+		end
+
+	frozen git_clone_options_set_remote_name (struct, the_value: POINTER)
+			-- Set `the_value' to the remote_name field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, const char *)"
+		alias
+			"remote_name"
+		end
+
+	frozen git_clone_options_get_remote_name (struct:POINTER):POINTER
+			-- Retreive the remote_name field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):const char *"
+		alias
+			"remote_name"
+		end
+
+	frozen git_clone_options_set_checkout_branch (struct, the_value: POINTER)
+			-- Set `the_value' to the checkout_branch field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, const char *)"
+		alias
+			"checkout_branch"
+		end
+
+	frozen git_clone_options_get_checkout_branch (struct:POINTER):POINTER
+			-- Retreive the checkout_branch field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):const char *"
+		alias
+			"checkout_branch"
+		end
+
+	frozen git_clone_options_set_signature (struct, the_value: POINTER)
+			-- Set `the_value' to the signature field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options, git_signature *)"
+		alias
+			"signature"
+		end
+
+	frozen git_clone_options_get_signature (struct:POINTER):POINTER
+			-- Retreive the signature field of the git_checkout_options pointed by `struct'
+		external
+			"C [struct <git2.h>] (git_clone_options):git_signature *"
+		alias
+			"signature"
+		end
+
 feature -- External structures (git_transfer_options)
 
 	frozen sizeof_git_transfer_progress: INTEGER
@@ -1604,6 +1702,38 @@ feature -- External constants
 			"C inline use <git2.h>"
 		alias
 			"GIT_CHECKOUT_CONFLICT_STYLE_DIFF3"
+		end
+
+	frozen GIT_CLONE_LOCAL_AUTO:INTEGER
+			-- Auto-detect Bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL_AUTO"
+		end
+
+	frozen GIT_CLONE_LOCAL:INTEGER
+			-- Bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL"
+		end
+
+	frozen GIT_CLONE_NO_LOCAL:INTEGER
+			-- Do no bypass the git-aware transport
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_NO_LOCAL"
+		end
+
+	frozen GIT_CLONE_LOCAL_NO_LINKS:INTEGER
+			-- Bypass the git-aware transport, but do not try to use hardlinks
+		external
+			"C inline use <git2.h>"
+		alias
+			"GIT_CLONE_LOCAL_NO_LINKS"
 		end
 
 feature -- Constants fcntl.h

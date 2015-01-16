@@ -11,6 +11,18 @@ Linux Ubuntu
 ------------
 
 Tested with Linux Ubuntu 14.04 with libgit2 0.21.3 manually installed (not the one from the package manager).
+To install the library, you must download it, name the containing directory "git", and put it in the 
+$EIFFEL_LIBRARY/contrib/library/ folder (You can also use a symbolic link). After that, you have to compile
+some C files. The easyest way to install the library is shown below. Be sure to have the EIFFEL_LIBRARY environment
+variables set and also to have the EiffelStudio binary files in the path. On most system, EIFFEL_LIBRARY will be set
+to /usr/local/Eiffel_XX.XX or /usr/lib/eiffelstudio-14.05 .
+
+```bash
+git clone https://github.com/tioui/Eiffel_Git.git
+cp -rp Eiffel_Git $EIFFEL_LIBRARY/contrib/library/git
+cd $EIFFEL_LIBRARY/contrib/library/git/library/Clib/
+finish_freezing -library
+```
 
 
 Windows

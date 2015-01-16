@@ -4,6 +4,7 @@ note
 	date: "2015, january 3"
 	revision: "0.1"
 	ToDo: "Notify callback"
+	ToDo: "baseline field of the structure. Git Tree Needed."
 
 class
 	GIT_CHECKOUT_OPTIONS
@@ -1205,17 +1206,276 @@ feature -- Access
 			Is_Disabled: not is_filters_enabled
 		end
 
+	paths_to_checkout:ARRAYED_LIST[READABLE_STRING_GENERAL]
+			-- When not empty, List of shell files patterns (possibly with wildcard) specifying which
+			-- paths should be taken into account, otherwise all files. Return only a copy of the
+			-- list, not the list itself.
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_count, i:INTEGER
+			l_c_paths:POINTER
+			l_c_string:C_STRING
+		do
+			l_c_paths := {GIT_EXTERNAL}.git_checkout_options_get_paths_pointer(item)
+			if l_c_paths.is_default_pointer then
+				create Result.make (0)
+			else
+				l_count := {GIT_EXTERNAL}.git_strarray_get_count(l_c_paths).to_integer
+				create Result.make (l_count)
+				from i := 1 until i > l_count loop
+					create l_c_string.make_by_pointer ({GIT_EXTERNAL}.git_strarray_get_string_i (l_c_paths, i - 1))
+					Result.extend(l_c_string.string)
+					i := i + 1
+				end
+			end
+		end
+
+	set_paths_to_checkout(a_paths_to_checkout:FINITE[READABLE_STRING_GENERAL])
+			-- Assign `paths_to_checkout' with the values in `a_paths_to_checkout'
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_count, i:INTEGER
+			l_c_string:C_STRING
+			l_c_paths, l_strings_pointer, l_string_pointer:POINTER
+			l_list:LINEAR[READABLE_STRING_GENERAL]
+		do
+			l_c_paths := {GIT_EXTERNAL}.git_checkout_options_get_paths_pointer(item)
+			if l_c_paths.is_default_pointer then
+				check False end
+			else
+				{GIT_EXTERNAL}.git_strarray_free(l_c_paths)
+				l_count := a_paths_to_checkout.count
+				{GIT_EXTERNAL}.git_strarray_set_count(l_c_paths, l_count)
+				l_strings_pointer := l_strings_pointer.memory_calloc (l_count, {GIT_EXTERNAL}.sizeof_pointer)
+				{GIT_EXTERNAL}.git_strarray_set_strings(l_c_paths, l_strings_pointer)
+				from
+					i := 1
+					l_list := a_paths_to_checkout.linear_representation
+					l_list.start
+				until
+					l_list.exhausted
+				loop
+					create l_c_string.make (l_list.item)
+					l_string_pointer := l_string_pointer.memory_calloc (l_c_string.managed_data.count,1)
+					l_string_pointer.memory_copy (l_c_string.managed_data.item, l_c_string.managed_data.count)
+					{GIT_EXTERNAL}.git_strarray_set_string_i(l_c_paths, i - 1, l_string_pointer)
+					l_list.forth
+					i := i + 1
+				end
+			end
+		end
+
+	target_directory:detachable READABLE_STRING_GENERAL assign set_target_directory
+			-- Alternative checkout path to workdir or Void for default
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_pointer:POINTER
+		do
+			l_pointer := {GIT_EXTERNAL}.git_checkout_options_get_target_directory(item)
+			if l_pointer.is_default_pointer then
+				Result := Void
+			else
+				Result := (create {C_STRING}.make_by_pointer (l_pointer)).string
+			end
+		end
+
+	set_target_directory(a_target_directory:detachable READABLE_STRING_GENERAL)
+			-- Assign `a_target_directory' to `target_directory'
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_c_string:C_STRING
+		do
+			if attached a_target_directory then
+				create l_c_string.make (a_target_directory)
+				{GIT_EXTERNAL}.git_checkout_options_set_target_directory(item, l_c_string.item)
+				internal_target_directory := l_c_string
+			else
+				{GIT_EXTERNAL}.git_checkout_options_set_target_directory(item, create {POINTER})
+				internal_target_directory := Void
+			end
+		ensure
+			Is_Assign: a_target_directory ~ target_directory
+		end
+
+	ancestor_label:detachable READABLE_STRING_GENERAL assign set_ancestor_label
+			-- the name of the common ancestor side of conflicts
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_pointer:POINTER
+		do
+			l_pointer := {GIT_EXTERNAL}.git_checkout_options_get_ancestor_label(item)
+			if l_pointer.is_default_pointer then
+				Result := Void
+			else
+				Result := (create {C_STRING}.make_by_pointer (l_pointer)).string
+			end
+		end
+
+	set_ancestor_label(a_ancestor_label:detachable READABLE_STRING_GENERAL)
+			-- Assign `a_ancestor_label' to `ancestor_label'
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_c_string:C_STRING
+		do
+			if attached a_ancestor_label then
+				create l_c_string.make (a_ancestor_label)
+				{GIT_EXTERNAL}.git_checkout_options_set_ancestor_label(item, l_c_string.item)
+				internal_ancestor_label := l_c_string
+			else
+				{GIT_EXTERNAL}.git_checkout_options_set_ancestor_label(item, create {POINTER})
+				internal_ancestor_label := Void
+			end
+		ensure
+			Is_Assign: a_ancestor_label ~ ancestor_label
+		end
+
+	our_label:detachable READABLE_STRING_GENERAL assign set_our_label
+			-- the name of the "our" side of conflicts
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_pointer:POINTER
+		do
+			l_pointer := {GIT_EXTERNAL}.git_checkout_options_get_our_label(item)
+			if l_pointer.is_default_pointer then
+				Result := Void
+			else
+				Result := (create {C_STRING}.make_by_pointer (l_pointer)).string
+			end
+		end
+
+	set_our_label(a_our_label:detachable READABLE_STRING_GENERAL)
+			-- Assign `a_our_label' to `our_label'
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_c_string:C_STRING
+		do
+			if attached a_our_label then
+				create l_c_string.make (a_our_label)
+				{GIT_EXTERNAL}.git_checkout_options_set_our_label(item, l_c_string.item)
+				internal_our_label := l_c_string
+			else
+				{GIT_EXTERNAL}.git_checkout_options_set_our_label(item, create {POINTER})
+				internal_our_label := Void
+			end
+		ensure
+			Is_Assign: a_our_label ~ our_label
+		end
+
+	their_label:detachable READABLE_STRING_GENERAL assign set_their_label
+			-- the name of the "their" side of conflicts
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_pointer:POINTER
+		do
+			l_pointer := {GIT_EXTERNAL}.git_checkout_options_get_their_label(item)
+			if l_pointer.is_default_pointer then
+				Result := Void
+			else
+				Result := (create {C_STRING}.make_by_pointer (l_pointer)).string
+			end
+		end
+
+	set_their_label(a_their_label:detachable READABLE_STRING_GENERAL)
+			-- Assign `a_their_label' to `their_label'
+		require
+			Current_Is_Valid: is_valid
+		local
+			l_c_string:C_STRING
+		do
+			if attached a_their_label then
+				create l_c_string.make (a_their_label)
+				{GIT_EXTERNAL}.git_checkout_options_set_their_label(item, l_c_string.item)
+				internal_their_label := l_c_string
+			else
+				{GIT_EXTERNAL}.git_checkout_options_set_their_label(item, create {POINTER})
+				internal_their_label := Void
+			end
+		ensure
+			Is_Assign: a_their_label ~ their_label
+		end
+
+	directory_mode:NATURAL assign set_directory_mode
+			-- The checkout directory file mode (in unix convention)
+			-- If 0, will use 0755
+		require
+			Current_Is_Valid: is_valid
+		do
+			Result := {GIT_EXTERNAL}.git_checkout_options_get_dir_mode(item)
+		end
+
+	set_directory_mode(a_directory_mode:NATURAL)
+			-- Assign `directory_mode' with the value of `a_directory_mode'
+		require
+			Current_Is_Valid: is_valid
+			Mode_Is_Valid: is_mode_valid(a_directory_mode)
+		do
+			{GIT_EXTERNAL}.git_checkout_options_set_dir_mode(item, a_directory_mode)
+		ensure
+			Is_Set: directory_mode = a_directory_mode
+		end
+
+	file_mode:NATURAL assign set_file_mode
+			-- The checkout file mode (in unix convention)
+			-- If 0, will use the blob file mode (or 0644 if not specified)
+		require
+			Current_Is_Valid: is_valid
+		do
+			Result := {GIT_EXTERNAL}.git_checkout_options_get_dir_mode(item)
+		end
+
+	set_file_mode(a_file_mode:NATURAL)
+			-- Assign `file_mode' with the value of `a_file_mode'
+		require
+			Current_Is_Valid: is_valid
+			Mode_Is_Valid: is_mode_valid(a_file_mode)
+		do
+			{GIT_EXTERNAL}.git_checkout_options_set_file_mode(item, a_file_mode)
+		ensure
+			Is_Set: file_mode = a_file_mode
+		end
+
+	file_open_flags:INTEGER assign set_file_open_flags
+			-- Flags used when opening files during the checkout.
+			-- The flags are set by ORing the {GIT_EXTERNAL}.O_* values
+			-- See: oflag of http://pubs.opengroup.org/onlinepubs/007908799/xsh/open.html
+			-- If null, will used {GIT_EXTERNAL}.`O_CREAT' | {GIT_EXTERNAL}.`O_TRUNC' | {GIT_EXTERNAL}.`O_WRONLY'
+		note
+			ToDo: "Creating a class to manage those flags."
+		require
+			Current_Is_Valid: is_valid
+		do
+			Result := {GIT_EXTERNAL}.git_checkout_options_get_file_open_flags(item)
+		end
+
+	set_file_open_flags(a_file_open_flags:INTEGER)
+			-- Assign `file_open_flags' with the value of `a_file_open_flags'
+		require
+			Current_Is_Valid: is_valid
+		do
+			{GIT_EXTERNAL}.git_checkout_options_set_file_open_flags(item, a_file_open_flags)
+		end
+
+	is_mode_valid(a_mode:NATURAL):BOOLEAN
+			-- `True' if `a_mode' represent a valide file mode (in unix convention)
+		do
+			Result := 	((a_mode \\ 10) < 8) and (((a_mode // 10) \\ 10) < 8) and
+						(((a_mode // 100) \\ 10) < 8) and (((a_mode // 1000) \\ 10) < 8) and
+						(a_mode <= 7777)
+		end
+
 	is_valid:BOOLEAN
 			-- Is `Current' in a valid (usable) state
 		do
 			Result := not item.is_default_pointer
-		end
-
-	paths_to_checkout:CHAIN[READABLE_STRING_GENERAL]
-			-- When not empty, List of shell files patterns (possibly with wildcard) specifying which
-			-- paths should be taken into account, otherwise all files.
-		do
-			create {ARRAYED_LIST[READABLE_STRING_GENERAL]}Result.make (0)
 		end
 
 	error:GIT_ERROR
@@ -1303,4 +1563,23 @@ feature {NONE} -- implementation
 											))).bit_not
 			Result := {GIT_EXTERNAL}.git_checkout_options_get_checkout_strategy(item).bit_and (l_no_base_strategy_flags)
 		end
+
+	internal_target_directory:detachable C_STRING
+			-- To protect the C string assign to `target_directory' internal struture
+			-- from being collected.
+
+	internal_ancestor_label:detachable C_STRING
+			-- To protect the C string assign to `ancestor_label' internal struture
+			-- from being collected.
+
+	internal_our_label:detachable C_STRING
+			-- To protect the C string assign to `our_label' internal struture
+			-- from being collected.
+
+	internal_their_label:detachable C_STRING
+			-- To protect the C string assign to `their_label' internal struture
+			-- from being collected.
+
+invariant
+	Directory_Mode_Is_Valid: is_mode_valid(directory_mode)
 end

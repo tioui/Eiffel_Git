@@ -362,7 +362,6 @@ feature -- Access
 		do
 			code := a_code
 			l_error := {GIT_EXTERNAL}.giterr_detach(item)
-			check l_error >= 0 end
 		end
 
 	structure_size:INTEGER

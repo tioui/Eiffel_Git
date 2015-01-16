@@ -237,6 +237,22 @@ feature -- External functions <git2.h>
 			"git_clone"
 		end
 
+	frozen git_strarray_free(a_array:POINTER)
+			-- Close a string array object
+		external
+			"C (git_strarray *) | <git2.h>"
+		alias
+			"git_strarray_free"
+		end
+
+	frozen git_strarray_copy(tgt, src:POINTER):INTEGER
+			-- Close a string array object
+		external
+			"C (git_strarray *, const git_strarray *) : int | <git2.h>"
+		alias
+			"git_strarray_copy"
+		end
+
 feature -- External structures (git_repository_init_options)
 
 	frozen sizeof_git_repository_init_options: INTEGER
@@ -579,6 +595,24 @@ feature -- External structures (git_checkout_options)
 			"target_directory"
 		end
 
+	frozen git_checkout_options_set_ancestor_label (struct, the_value: POINTER)
+			-- Assign `the_value' of the the name of the common ancestor side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options, const char *)"
+		alias
+			"ancestor_label"
+		end
+
+	frozen git_checkout_options_get_ancestor_label (struct:POINTER):POINTER
+			-- Retreive the value of the the name of the common ancestor side of conflicts of the
+			-- git_checkout_options structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_checkout_options):const char *"
+		alias
+			"ancestor_label"
+		end
+
 	frozen git_checkout_options_set_our_label (struct, the_value: POINTER)
 			-- Assign `the_value' of the the name of the "our" side of conflicts of the
 			-- git_checkout_options structure pointed by the `struct' pointer
@@ -778,6 +812,67 @@ feature -- External structure (git_repository)
 			"C inline use <git2.h>"
 		alias
 			"*((git_repository **) $repopointer)"
+		end
+
+
+feature -- External structures (git_strarray)
+
+	frozen sizeof_git_strarray: INTEGER
+			-- Number of byte of the C structure git_strarray
+		external
+			"C inline use <git2.h>"
+		alias
+			"sizeof(git_strarray)"
+		end
+
+	frozen git_strarray_get_count (struct:POINTER):INTEGER_64
+			-- Number of string include in the git_strarray
+		external
+			"C [struct <git2.h>] (git_strarray):size_t"
+		alias
+			"count"
+		end
+
+	frozen git_strarray_set_count (struct: POINTER; the_value:INTEGER_64)
+			-- Assign `the_value' of the the string count of the
+			-- git_strarray structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_strarray, size_t)"
+		alias
+			"count"
+		end
+
+	frozen git_strarray_get_strings (struct:POINTER):POINTER
+			-- Number of string include in the git_strarray
+		external
+			"C [struct <git2.h>] (git_strarray):char **"
+		alias
+			"strings"
+		end
+
+	frozen git_strarray_set_strings (struct, the_value: POINTER)
+			-- Assign `the_value' of the the strings pointer of the
+			-- git_strarray structure pointed by the `struct' pointer
+		external
+			"C [struct <git2.h>] (git_strarray, char **)"
+		alias
+			"strings"
+		end
+
+	frozen git_strarray_get_string_i(struct:POINTER; i:INTEGER): POINTER
+			-- Get the string at index `i' in the git_strarray structure `struct'
+		external
+			"C inline use <git2.h>"
+		alias
+			"((git_strarray *)$struct)->strings[$i]"
+		end
+
+	frozen git_strarray_set_string_i(struct:POINTER; i:INTEGER; str:POINTER)
+			-- Set the string `str' at index `i' in the git_strarray structure `struct'
+		external
+			"C inline use <git2.h>"
+		alias
+			"((git_strarray *)$struct)->strings[$i] = $str"
 		end
 
 feature -- External constants
@@ -1509,6 +1604,105 @@ feature -- External constants
 			"C inline use <git2.h>"
 		alias
 			"GIT_CHECKOUT_CONFLICT_STYLE_DIFF3"
+		end
+
+feature -- Constants fcntl.h
+
+	frozen O_RDONLY:INTEGER
+			--  Open for reading only
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RDONLY"
+		end
+
+	frozen O_WRONLY:INTEGER
+			--  Open for writing only
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_WRONLY"
+		end
+
+	frozen O_RDWR:INTEGER
+			--  Open for reading and writing. The result is undefined if this flag is applied to a FIFO
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RDWR"
+		end
+
+	frozen O_APPEND:INTEGER
+			--  If set, the file offset will be set to the end of the file prior to each write
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_APPEND"
+		end
+
+	frozen O_CREAT:INTEGER
+			--  If the file exists, this flag has no effect except as noted under O_EXCL below. Otherwise, the file is created
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_CREAT"
+		end
+
+	frozen O_DSYNC:INTEGER
+			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_DSYNC"
+		end
+
+	frozen O_EXCL:INTEGER
+			--  If O_CREAT and O_EXCL are set, open() will fail if the file exists. If O_CREAT is not set, the effect is undefined.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_EXCL"
+		end
+
+	frozen O_NOCTTY:INTEGER
+			--  If set and open path identifies a terminal device, open() will not cause the terminal device to become the controlling terminal for the process
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_NOCTTY"
+		end
+
+	frozen O_NONBLOCK:INTEGER
+			--  If set, the open() function will return without blocking for the device to be ready or available. Subsequent behaviour of the device is device-specific.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_NONBLOCK"
+		end
+
+	frozen O_RSYNC:INTEGER
+			--  Read I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_RSYNC"
+		end
+
+	frozen O_SYNC:INTEGER
+			--  Write I/O operations on the file descriptor complete as defined by synchronised I/O data integrity completion
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_SYNC"
+		end
+
+	frozen O_TRUNC:INTEGER
+			-- If the file exists and is a regular file, and the file is successfully opened O_RDWR or O_WRONLY,
+			-- its length is truncated to 0 and the mode and owner are unchanged.
+		external
+			"C inline use <fcntl.h>"
+		alias
+			"O_TRUNC"
 		end
 
 end
